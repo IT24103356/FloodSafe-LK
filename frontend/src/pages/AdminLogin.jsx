@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { LoaderCircle, LockKeyhole, ShieldCheck } from 'lucide-react'
+import { AlertCircle, LoaderCircle, LockKeyhole, ShieldCheck } from 'lucide-react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext.jsx'
 import { loginAdmin } from '../services/approvalService.js'
@@ -23,7 +23,12 @@ export default function AdminLogin() {
       auth.login(session)
       navigate(location.state?.from ?? '/admin', { replace: true })
     } catch (err) {
-      setError(err.message)
+      setError(
+        err.message === 'Failed to fetch'
+          ? 'Unable to reach the authentication service. Check that the API is running.'
+          : err.message || 'The email or password is incorrect.',
+      )
+      setForm((current) => ({ ...current, password: '' }))
     } finally {
       setLoading(false)
     }
@@ -36,15 +41,23 @@ export default function AdminLogin() {
         <span className="fs-eyebrow">Restricted access</span>
         <h1>Administrator sign in</h1>
         <p>Sign in to review private proposals and manage published records.</p>
-        {error && <div className="alert error" role="alert">{error}</div>}
+        {error && (
+          <div className="login-error" role="alert" aria-live="assertive">
+            <AlertCircle size={21} aria-hidden="true" />
+            <div>
+              <strong>Sign-in failed</strong>
+              <span>{error}</span>
+            </div>
+          </div>
+        )}
         <form className="workflow-form" onSubmit={submit}>
           <label>Email
-            <input type="email" required autoComplete="username" value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })} />
+            <input type="email" required autoComplete="username" value={form.email} aria-invalid={Boolean(error)}
+              onChange={(e) => { setError(''); setForm({ ...form, email: e.target.value }) }} />
           </label>
           <label>Password
-            <input type="password" required autoComplete="current-password" value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })} />
+            <input type="password" required autoComplete="current-password" value={form.password} aria-invalid={Boolean(error)}
+              onChange={(e) => { setError(''); setForm({ ...form, password: e.target.value }) }} />
           </label>
           <button className="fs-button primary" disabled={loading}>
             {loading ? <LoaderCircle className="spin" size={17} /> : <LockKeyhole size={17} />}

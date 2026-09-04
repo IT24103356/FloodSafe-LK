@@ -239,6 +239,37 @@
   border-radius: 18px;
 }
 
+.login-error {
+  margin-top: var(--space-5);
+  padding: var(--space-4);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: var(--space-3);
+  color: var(--danger);
+  background: var(--danger-soft);
+  border: 1px solid color-mix(in srgb, var(--danger) 32%, var(--border));
+  border-radius: var(--radius-md);
+}
+
+.login-error > div {
+  display: grid;
+  gap: .15rem;
+}
+
+.login-error strong {
+  color: var(--danger);
+}
+
+.login-error span {
+  color: var(--text);
+  font-size: var(--fs-sm);
+}
+
+.workflow-form input[aria-invalid="true"] {
+  border-color: var(--danger) !important;
+}
+
 .success-mark {
   color: var(--success);
   background: var(--success-soft);
