@@ -54,7 +54,7 @@ app.UseExceptionHandler(errorApp =>
         {
             context.Response.Headers.Append("Access-Control-Allow-Origin", "http://localhost:5173");
         }
-        await context.Response.WriteAsJsonAsync(new)
+        await context.Response.WriteAsJsonAsync(new
         {
             type = "https://httpstatuses.com/500",
             title = "A server error occurred. Please try again later.",
