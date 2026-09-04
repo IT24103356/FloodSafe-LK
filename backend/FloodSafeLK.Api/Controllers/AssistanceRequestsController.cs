@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using FloodSafeLK.Api.DTOs;
 using FloodSafeLK.Api.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FloodSafeLK.Api.Controllers;
 
@@ -72,6 +73,7 @@ public class AssistanceRequestsController : ControllerBase
     /// <summary>
     /// Update an existing assistance request.
     /// </summary>
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     [ProducesResponseType(typeof(AssistanceRequestDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -91,6 +93,7 @@ public class AssistanceRequestsController : ControllerBase
     /// <summary>
     /// Delete an assistance request by ID.
     /// </summary>
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

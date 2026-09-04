@@ -24,7 +24,7 @@ function DetailItem({ label, value }) {
   );
 }
 
-export default function AssistanceDetails({ request, onClose, onEdit, onDelete, onStatusUpdated }) {
+export default function AssistanceDetails({ request, canManage = false, onClose, onEdit, onDelete, onStatusUpdated }) {
   const [updatingStatus, setUpdatingStatus] = useState(false);
   const [statusError, setStatusError] = useState('');
 
@@ -77,41 +77,47 @@ export default function AssistanceDetails({ request, onClose, onEdit, onDelete, 
             <div className="detail-desc">{request.description}</div>
           </div>
 
-          {/* Status Workflow */}
-          <div style={{ marginTop: '1.25rem' }}>
-            <div className="detail-label" style={{ marginBottom: '0.65rem' }}>Update Status</div>
-            <div className="status-workflow">
-              {STATUSES.map((s, i) => (
-                <React.Fragment key={s}>
-                  <div className="workflow-step">
-                    {(() => {
-                      const StatusIcon = STATUS_ICONS[s];
-                      return (
-                    <button
-                      id={`btn-status-${s.toLowerCase()}-${request.id}`}
-                      className={`btn btn-sm ${request.status === s ? 'btn-primary' : 'btn-secondary'}`}
-                      onClick={() => handleStatusChange(s)}
-                      disabled={updatingStatus || request.status === s}
-                      style={request.status === s ? { opacity: 1 } : {}}
-                    >
-                      <StatusIcon size={15} /> {statusLabel(s)}
-                    </button>
-                      );
-                    })()}
-                  </div>
-                  {i < STATUSES.length - 1 && <span className="workflow-arrow">→</span>}
-                </React.Fragment>
-              ))}
+          {/* Admin-only status workflow */}
+          {canManage && (
+            <div style={{ marginTop: '1.25rem' }}>
+              <div className="detail-label" style={{ marginBottom: '0.65rem' }}>Update Status</div>
+              <div className="status-workflow">
+                {STATUSES.map((s, i) => (
+                  <React.Fragment key={s}>
+                    <div className="workflow-step">
+                      {(() => {
+                        const StatusIcon = STATUS_ICONS[s];
+                        return (
+                          <button
+                            id={`btn-status-${s.toLowerCase()}-${request.id}`}
+                            className={`btn btn-sm ${request.status === s ? 'btn-primary' : 'btn-secondary'}`}
+                            onClick={() => handleStatusChange(s)}
+                            disabled={updatingStatus || request.status === s}
+                            style={request.status === s ? { opacity: 1 } : {}}
+                          >
+                            <StatusIcon size={15} /> {statusLabel(s)}
+                          </button>
+                        );
+                      })()}
+                    </div>
+                    {i < STATUSES.length - 1 && <span className="workflow-arrow">→</span>}
+                  </React.Fragment>
+                ))}
+              </div>
+              {statusError && <p className="form-error" style={{ marginTop: '0.5rem' }}>⚠ {statusError}</p>}
             </div>
-            {statusError && <p className="form-error" style={{ marginTop: '0.5rem' }}>⚠ {statusError}</p>}
-          </div>
+          )}
         </div>
 
         <div className="modal-footer">
-          <button className="btn btn-danger btn-sm" id={`btn-detail-delete-${request.id}`} onClick={onDelete}><Trash2 size={16} /> Delete</button>
+          {canManage && (
+            <button className="btn btn-danger btn-sm" id={`btn-detail-delete-${request.id}`} onClick={onDelete}><Trash2 size={16} /> Delete</button>
+          )}
           <div style={{ flex: 1 }} />
           <button className="btn btn-secondary" onClick={onClose}>Close</button>
-          <button className="btn btn-primary" id={`btn-detail-edit-${request.id}`} onClick={onEdit}><Edit3 size={16} /> Edit</button>
+          {canManage && (
+            <button className="btn btn-primary" id={`btn-detail-edit-${request.id}`} onClick={onEdit}><Edit3 size={16} /> Edit</button>
+          )}
         </div>
       </div>
     </div>

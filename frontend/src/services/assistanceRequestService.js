@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { clearStoredSession, getStoredToken } from '../auth/AuthContext.jsx';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5203';
 const API_BASE = `${BASE_URL}/api/assistancerequests`;
@@ -8,10 +9,17 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
+api.interceptors.request.use((config) => {
+  const token = getStoredToken();
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
 // Response interceptor for error normalisation
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    if (error.response?.status === 401) clearStoredSession();
     const message =
       error.response?.data?.message ||
       error.response?.data?.title ||

@@ -15,7 +15,7 @@ function formatDate(dt) {
   return new Date(dt).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
 }
 
-export default function AssistanceCard({ request, onView, onEdit, onDelete }) {
+export default function AssistanceCard({ request, canManage = false, onView, onEdit, onDelete }) {
   const { id, requesterName, district, location, requestType, priority, status, numberOfPeople, description, createdAt } = request;
 
   return (
@@ -58,8 +58,12 @@ export default function AssistanceCard({ request, onView, onEdit, onDelete }) {
         <span className="card-date"><Clock3 size={14} aria-hidden="true" /> {formatDate(createdAt)}</span>
         <div className="card-actions">
           <button id={`btn-view-${id}`} className="btn btn-secondary btn-sm" onClick={(e) => { e.stopPropagation(); onView(); }} aria-label="View details"><Eye size={15} /> View</button>
-          <button id={`btn-edit-${id}`} className="btn btn-secondary btn-sm" onClick={(e) => { e.stopPropagation(); onEdit(); }} aria-label="Edit request"><Edit3 size={15} /> Edit</button>
-          <button id={`btn-delete-${id}`} className="btn btn-danger btn-sm" onClick={(e) => { e.stopPropagation(); onDelete(); }} aria-label="Delete request"><Trash2 size={15} /></button>
+          {canManage && (
+            <>
+              <button id={`btn-edit-${id}`} className="btn btn-secondary btn-sm" onClick={(e) => { e.stopPropagation(); onEdit(); }} aria-label="Edit request"><Edit3 size={15} /> Edit</button>
+              <button id={`btn-delete-${id}`} className="btn btn-danger btn-sm" onClick={(e) => { e.stopPropagation(); onDelete(); }} aria-label="Delete request"><Trash2 size={15} /></button>
+            </>
+          )}
         </div>
       </div>
     </article>

@@ -6,6 +6,7 @@ import AssistanceForm from '../components/AssistanceForm';
 import AssistanceDetails from '../components/AssistanceDetails';
 import { EmptyState, LoadingState, PageHeader, StatCard } from '../components/common/UIComponents.jsx';
 import { useToast } from '../components/common/ToastProvider.jsx';
+import { useAuth } from '../auth/AuthContext.jsx';
 import {
   getAssistanceRequests,
   deleteAssistanceRequest,
@@ -13,6 +14,7 @@ import {
 import '../styles/assistance.css';
 
 export default function AssistanceRequestsPage() {
+  const auth = useAuth();
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({ search: '', district: '', requestType: '', priority: '', status: '' });
@@ -116,6 +118,7 @@ export default function AssistanceRequestsPage() {
               <AssistanceCard
                 key={req.id}
                 request={req}
+                canManage={auth.isAdmin}
                 onView={() => setDetailTarget(req)}
                 onEdit={() => { setEditTarget(req); setShowForm(true); }}
                 onDelete={() => setConfirmDelete(req)}
@@ -146,6 +149,7 @@ export default function AssistanceRequestsPage() {
       {detailTarget && (
         <AssistanceDetails
           request={detailTarget}
+          canManage={auth.isAdmin}
           onClose={() => setDetailTarget(null)}
           onEdit={() => { setEditTarget(detailTarget); setDetailTarget(null); setShowForm(true); }}
           onDelete={() => { setConfirmDelete(detailTarget); setDetailTarget(null); }}
