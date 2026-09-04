@@ -98,8 +98,7 @@ const ResourceCard = ({ resource, onView, onEdit, onDelete }) => {
             role="progressbar"
             aria-valuenow={quantity}
             aria-valuemin={0}
-            aria-valuemax={minimumRequired * 2}
-          />
+            aria-valuemax={Math.max(minimumRequired * 2, quantity, 1)}
         </div>
         <div className="quantity-min">Min. Required: {minimumRequired.toLocaleString()} {unit}</div>
       </div>
