@@ -92,10 +92,10 @@ public class SafeCentreService : ISafeCentreService
             ContactNumber = dto.ContactNumber.Trim(),
             Capacity = dto.Capacity,
             CurrentOccupancy = dto.CurrentOccupancy,
-            Facilities = dto.Facilities.Trim(),
+            Facilities = (dto.Facilities ?? string.Empty).Trim(),
             Availability = dto.Availability,
             OpeningDate = dto.OpeningDate == default ? DateTime.UtcNow : dto.OpeningDate.ToUniversalTime(),
-            Notes = dto.Notes.Trim(),
+            Notes = (dto.Notes ?? string.Empty).Trim(),
             IsSample = dto.IsSample
         };
 
@@ -119,10 +119,10 @@ public class SafeCentreService : ISafeCentreService
         entity.ContactNumber = dto.ContactNumber.Trim();
         entity.Capacity = dto.Capacity;
         entity.CurrentOccupancy = dto.CurrentOccupancy;
-        entity.Facilities = dto.Facilities.Trim();
+        entity.Facilities = (dto.Facilities ?? string.Empty).Trim();
         entity.Availability = dto.Availability;
         entity.OpeningDate = dto.OpeningDate.ToUniversalTime();
-        entity.Notes = dto.Notes.Trim();
+        entity.Notes = (dto.Notes ?? string.Empty).Trim();
 
         await _context.SaveChangesAsync();
 

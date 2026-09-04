@@ -21,8 +21,8 @@ public class CreateSafeCentreDto
 
     [Required(ErrorMessage = "Contact number is required.")]
     [MaxLength(20, ErrorMessage = "Contact number cannot exceed 20 characters.")]
-    [RegularExpression(@"^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$",
-        ErrorMessage = "Please provide a valid phone number.")]
+    [RegularExpression(@"^(?:\+94|0)(?:[ -]?[0-9]){9}$",
+        ErrorMessage = "Enter a valid Sri Lankan contact number, such as 0112345678 or +94112345678.")]
     public string ContactNumber { get; set; } = string.Empty;
 
     [Range(1, int.MaxValue, ErrorMessage = "Capacity must be greater than 0.")]

@@ -27,11 +27,11 @@ function validate(fields) {
   if (!fields.district) errors.district = 'District is required.';
   if (!fields.address.trim()) errors.address = 'Address is required.';
 
-  const phoneRegex = /^\+?\(?[0-9]{3}\)?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
+  const phoneRegex = /^(?:\+94|0)(?:[ -]?[0-9]){9}$/;
   if (!fields.contactNumber.trim()) {
     errors.contactNumber = 'Contact number is required.';
   } else if (!phoneRegex.test(fields.contactNumber.trim())) {
-    errors.contactNumber = 'Please enter a valid phone number.';
+    errors.contactNumber = 'Enter a Sri Lankan number such as 0112345678 or +94112345678.';
   }
 
   const cap = parseInt(fields.capacity, 10);

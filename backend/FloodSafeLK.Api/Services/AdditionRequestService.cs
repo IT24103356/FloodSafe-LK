@@ -63,10 +63,10 @@ public class AdditionRequestService(
             ContactNumber = dto.ContactNumber.Trim(),
             Capacity = dto.Capacity,
             CurrentOccupancy = dto.CurrentOccupancy,
-            Facilities = dto.Facilities.Trim(),
+            Facilities = (dto.Facilities ?? string.Empty).Trim(),
             Availability = dto.Availability,
             OpeningDate = dto.OpeningDate.ToUniversalTime(),
-            Notes = dto.Notes.Trim(),
+            Notes = (dto.Notes ?? string.Empty).Trim(),
             SubmittedAt = DateTime.UtcNow
         };
         context.SafeCentreAdditionRequests.Add(request);
