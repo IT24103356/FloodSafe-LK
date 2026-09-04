@@ -20,7 +20,7 @@ const formatDate = (dateString) => {
 };
 
 const getStatusClass = (status, isLowStock) => {
-  if (isLowStock || status === "Low Stock") return "low-stock";
+  if (isLowStock) return "low-stock";
   if (status === "Depleted") return "depleted";
   if (status === "Reserved") return "reserved";
   return "";
