@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
+import { AlertTriangle, Plus, Waves } from 'lucide-react'
 import { useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import IncidentCard from '../components/IncidentCard'
+import { EmptyState, ErrorState, LoadingState, PageHeader } from '../components/common/UIComponents.jsx'
 import { DISTRICTS, INCIDENT_TYPES, SEVERITIES } from '../constants'
 import { getAll } from '../services/incidentService'
 
@@ -58,13 +61,13 @@ export default function Incidents() {
 
   return (
     <section>
-      <header className="page-head">
-        <div>
-          <p className="eyebrow">Incident board</p>
-          <h1>Flood incidents</h1>
-          <p>Search and filter community reports. Filtering and sorting run on the server.</p>
-        </div>
-      </header>
+      <PageHeader
+        eyebrow="Incident board"
+        title="Flood incidents"
+        description="Search verified platform records by district, severity, and incident type."
+        icon={Waves}
+        actions={<Link className="fs-button danger" to="/report"><Plus size={17} /> Report incident</Link>}
+      />
 
       {notice ? (
         <p className="banner success" role="status">
@@ -158,13 +161,22 @@ export default function Incidents() {
         </div>
       </form>
 
-      {loading ? <p className="muted">Loading incidents…</p> : null}
-      {error ? <p className="banner error">{error}</p> : null}
+      {loading ? <LoadingState label="Loading flood incidents…" cards={4} /> : null}
+      {error ? <ErrorState message="Flood incident records could not be loaded. Check the API and try again." onRetry={() => {
+        setError('')
+        setLoading(true)
+        setApplied({ ...applied })
+      }} /> : null}
       {!loading && !error && incidents.length === 0 ? (
-        <p className="empty">No incidents match these filters. Try a wider search or report a new one.</p>
+        <EmptyState
+          icon={AlertTriangle}
+          title="No flood incidents found"
+          message="Try changing your filters or report a new community incident."
+          action={<Link className="fs-button primary" to="/report"><Plus size={16} /> Report incident</Link>}
+        />
       ) : null}
 
-      <div className="card-list">
+      <div className="card-list" aria-live="polite">
         {incidents.map((incident) => (
           <IncidentCard key={incident.id} incident={incident} />
         ))}

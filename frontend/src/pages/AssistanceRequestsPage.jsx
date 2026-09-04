@@ -1,26 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { AlertTriangle, HandHeart, ListChecks, Plus, Timer, UsersRound } from 'lucide-react';
 import FilterBar from '../components/AssistanceFilterBar';
 import AssistanceCard from '../components/AssistanceCard';
 import AssistanceForm from '../components/AssistanceForm';
 import AssistanceDetails from '../components/AssistanceDetails';
+import { EmptyState, LoadingState, PageHeader, StatCard } from '../components/common/UIComponents.jsx';
+import { useToast } from '../components/common/ToastProvider.jsx';
 import {
   getAssistanceRequests,
   deleteAssistanceRequest,
 } from '../services/assistanceRequestService';
 import '../styles/assistance.css';
-
-function Toast({ toasts }) {
-  return (
-    <div className="toast-container">
-      {toasts.map((t) => (
-        <div key={t.id} className={`toast toast-${t.type}`}>
-          <span>{t.type === 'success' ? '✓' : t.type === 'error' ? '✕' : 'ℹ'}</span>
-          {t.message}
-        </div>
-      ))}
-    </div>
-  );
-}
 
 export default function AssistanceRequestsPage() {
   const [requests, setRequests] = useState([]);
@@ -33,13 +23,7 @@ export default function AssistanceRequestsPage() {
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
 
-  const [toasts, setToasts] = useState([]);
-
-  const addToast = useCallback((message, type = 'success') => {
-    const id = Date.now();
-    setToasts((t) => [...t, { id, message, type }]);
-    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 3500);
-  }, []);
+  const { showToast: addToast } = useToast();
 
   const fetchRequests = useCallback(async () => {
     setLoading(true);
@@ -95,63 +79,27 @@ export default function AssistanceRequestsPage() {
 
   return (
     <div className="app-wrapper">
-      {/* Header */}
-      <header className="app-header">
-        <div className="app-header-inner">
-          <div className="app-logo">
-            <div className="app-logo-icon">🌊</div>
-            <div>
-              <span className="app-logo-text">FloodSafe LK</span>
-              <span className="app-logo-sub">Community Assistance Platform</span>
-            </div>
-          </div>
-          <div className="student-badge">
-            <strong>IT24102706</strong> · Priyadarshani G.P.S.D.
-          </div>
-        </div>
-      </header>
-
       <div className="main-content">
-        {/* Hero */}
-        <div className="page-hero">
-          <div>
-            <h1 className="page-hero-title">🆘 Assistance Requests</h1>
-            <p className="page-hero-sub">Community flood assistance request management — Sri Lanka</p>
-          </div>
-          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
-            <div className="sample-notice">⚠ Sample data is clearly labelled</div>
-            <button
+        <PageHeader
+          eyebrow="Community support"
+          title="Assistance requests"
+          icon={HandHeart}
+          description="Coordinate food, water, medical support, transport, evacuation, and shelter needs."
+          actions={<button
               id="btn-new-request"
-              className="btn btn-primary"
+              className="fs-button primary"
               onClick={() => { setEditTarget(null); setShowForm(true); }}
             >
-              + New Request
-            </button>
-          </div>
-        </div>
+              <Plus size={17} /> New request
+            </button>}
+        />
 
         {/* Stats */}
-        <div className="stats-bar">
-          <div className="stat-card">
-            <div className="stat-number" style={{ color: '#f0f6ff' }}>{total}</div>
-            <div className="stat-label">Total</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-number" style={{ color: 'var(--pending)' }}>{pending}</div>
-            <div className="stat-label">Pending</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-number" style={{ color: 'var(--inprogress)' }}>{inProgress}</div>
-            <div className="stat-label">In Progress</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-number" style={{ color: 'var(--resolved)' }}>{resolved}</div>
-            <div className="stat-label">Resolved</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-number" style={{ color: 'var(--critical)' }}>{critical}</div>
-            <div className="stat-label">Critical</div>
-          </div>
+        <div className="fs-stats-grid">
+          <StatCard icon={ListChecks} label="Total requests" value={total} />
+          <StatCard icon={Timer} label="Pending" value={pending} tone="warning" detail={`${inProgress} in progress`} />
+          <StatCard icon={UsersRound} label="Resolved" value={resolved} tone="success" />
+          <StatCard icon={AlertTriangle} label="Critical priority" value={critical} tone="danger" />
         </div>
 
         {/* Filters */}
@@ -159,13 +107,9 @@ export default function AssistanceRequestsPage() {
 
         {/* Results */}
         {loading ? (
-          <div className="loading-center"><div className="loading-spinner" /></div>
+          <LoadingState label="Loading community assistance requests…" cards={4} />
         ) : requests.length === 0 ? (
-          <div className="empty-state">
-            <div className="empty-icon">📭</div>
-            <div className="empty-title">No requests found</div>
-            <p>Try adjusting your filters or submit a new assistance request.</p>
-          </div>
+          <EmptyState icon={HandHeart} title="No assistance requests found" message="Try adjusting the filters or submit a new request." />
         ) : (
           <div className="cards-grid">
             {requests.map((req) => (
@@ -239,8 +183,6 @@ export default function AssistanceRequestsPage() {
           </div>
         </div>
       )}
-
-      <Toast toasts={toasts} />
     </div>
   );
 }

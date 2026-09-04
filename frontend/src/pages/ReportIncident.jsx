@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
+import { ClipboardPenLine } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import IncidentForm from '../components/IncidentForm'
+import { ErrorState, LoadingState, PageHeader } from '../components/common/UIComponents.jsx'
 import { create, getById, update } from '../services/incidentService'
 
 export default function ReportIncident() {
@@ -43,20 +45,17 @@ export default function ReportIncident() {
 
   return (
     <section className="narrow">
-      <header className="page-head">
-        <div>
-          <p className="eyebrow">{isEdit ? 'Update record' : 'New report'}</p>
-          <h1>{isEdit ? 'Edit flood incident' : 'Report a flood incident'}</h1>
-          <p>
-            {isEdit
-              ? 'Change the details below. Saving recalculates the prototype risk score.'
-              : 'Describe what you can see on the ground. Required fields are validated in the browser and again by the API.'}
-          </p>
-        </div>
-      </header>
+      <PageHeader
+        eyebrow={isEdit ? 'Update record' : 'Emergency reporting'}
+        title={isEdit ? 'Edit flood incident' : 'Report a flood incident'}
+        icon={ClipboardPenLine}
+        description={isEdit
+          ? 'Update the report carefully. Saving recalculates the transparent prototype risk score.'
+          : 'Describe current ground conditions. Required fields are checked here and securely validated by the API.'}
+      />
 
-      {loading ? <p className="muted">Loading incident…</p> : null}
-      {error ? <p className="banner error">{error}</p> : null}
+      {loading ? <LoadingState label="Loading incident form…" cards={2} /> : null}
+      {error ? <ErrorState message={error} /> : null}
       {!loading && !error ? (
         <IncidentForm
           key={id || 'create'}

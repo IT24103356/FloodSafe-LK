@@ -1,4 +1,6 @@
+import { ArrowLeft, Edit3, Trash2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { StatusBadge } from './common/UIComponents.jsx'
 import { formatDateTime, RISK_DISCLAIMER, typeLabel } from '../constants'
 
 export default function IncidentDetails({ incident, onDelete, deleting, message }) {
@@ -15,7 +17,7 @@ export default function IncidentDetails({ incident, onDelete, deleting, message 
           <p className="eyebrow">{incident.district}</p>
           <h1>{incident.location}</h1>
         </div>
-        <span className={`pill ${riskClass}`}>{incident.riskLevel} risk</span>
+        <StatusBadge className={riskClass} tone={incident.riskLevel === 'Critical' ? 'danger' : incident.riskLevel === 'High' ? 'warning' : 'info'}>{incident.riskLevel} risk</StatusBadge>
       </header>
 
       {incident.isSample ? (
@@ -44,13 +46,13 @@ export default function IncidentDetails({ incident, onDelete, deleting, message 
 
       <div className="details-actions">
         <Link className="btn primary" to={`/incidents/${incident.id}/edit`}>
-          Edit incident
+          <Edit3 size={16} /> Edit incident
         </Link>
         <button className="btn danger" type="button" onClick={onDelete} disabled={deleting}>
-          {deleting ? 'Deleting…' : 'Delete incident'}
+          <Trash2 size={16} /> {deleting ? 'Deleting…' : 'Delete incident'}
         </button>
         <Link className="btn ghost" to="/incidents">
-          Back to list
+          <ArrowLeft size={16} /> Back to list
         </Link>
       </div>
     </article>

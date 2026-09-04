@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Save, Send } from 'lucide-react';
 import { createAssistanceRequest, updateAssistanceRequest } from '../services/assistanceRequestService';
 
 const DISTRICTS = [
@@ -11,6 +12,16 @@ const DISTRICTS = [
 const REQUEST_TYPES = ['Food','Water','Medical','Transport','Evacuation','Shelter','Other'];
 const PRIORITIES = ['Low','Medium','High','Critical'];
 const STATUSES = ['Pending','InProgress','Resolved'];
+
+function FormField({ id, label, required, children, error }) {
+  return (
+    <div className="form-field">
+      <label htmlFor={id}>{label}{required && <span className="required">*</span>}</label>
+      {children}
+      {error && <span className="form-error">{error}</span>}
+    </div>
+  );
+}
 
 function validate(form, isEdit) {
   const errs = {};
@@ -97,85 +108,78 @@ export default function AssistanceForm({ initial, onSuccess, onCancel }) {
     }
   };
 
-  const F = ({ id, label, required, children, error }) => (
-    <div className="form-field">
-      <label htmlFor={id}>{label}{required && <span className="required">*</span>}</label>
-      {children}
-      {error && <span className="form-error">⚠ {error}</span>}
-    </div>
-  );
-
   return (
     <form id="assistance-request-form" onSubmit={handleSubmit} noValidate>
       <div className="modal-body">
         {serverError && (
-          <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 8, padding: '0.75rem 1rem', marginBottom: '1rem', color: '#fca5a5', fontSize: '0.875rem' }}>
-            ⚠ {serverError}
+          <div className="banner error">
+            {serverError}
           </div>
         )}
 
         <p className="form-section-title">Requester Information</p>
         <div className="form-grid">
-          <F id="requesterName" label="Requester Name" required error={errors.requesterName}>
+          <FormField id="requesterName" label="Requester Name" required error={errors.requesterName}>
             <input id="requesterName" type="text" value={form.requesterName} onChange={set('requesterName')}
               className={errors.requesterName ? 'error' : ''} placeholder="Full name" disabled={isEdit} />
-          </F>
-          <F id="phone" label="Phone Number" required error={errors.phone}>
+          </FormField>
+          <FormField id="phone" label="Phone Number" required error={errors.phone}>
             <input id="phone" type="tel" value={form.phone} onChange={set('phone')}
               className={errors.phone ? 'error' : ''} placeholder="0771234567 or +94771234567" disabled={isEdit} />
-          </F>
-          <F id="district" label="District" required error={errors.district}>
+          </FormField>
+          <FormField id="district" label="District" required error={errors.district}>
             <select id="district" value={form.district} onChange={set('district')}
               className={errors.district ? 'error' : ''} disabled={isEdit}>
               <option value="">Select district…</option>
               {DISTRICTS.map(d => <option key={d} value={d}>{d}</option>)}
             </select>
-          </F>
-          <F id="location" label="Location / Address" required error={errors.location}>
+          </FormField>
+          <FormField id="location" label="Location / Address" required error={errors.location}>
             <input id="location" type="text" value={form.location} onChange={set('location')}
               className={errors.location ? 'error' : ''} placeholder="Street, village, landmark…" />
-          </F>
+          </FormField>
         </div>
 
         <p className="form-section-title">Request Details</p>
         <div className="form-grid">
-          <F id="requestType" label="Request Type" required error={errors.requestType}>
+          <FormField id="requestType" label="Request Type" required error={errors.requestType}>
             <select id="requestType" value={form.requestType} onChange={set('requestType')}
               className={errors.requestType ? 'error' : ''}>
               <option value="">Select type…</option>
               {REQUEST_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
             </select>
-          </F>
-          <F id="priority" label="Priority" required error={errors.priority}>
+          </FormField>
+          <FormField id="priority" label="Priority" required error={errors.priority}>
             <select id="priority" value={form.priority} onChange={set('priority')}
               className={errors.priority ? 'error' : ''}>
               <option value="">Select priority…</option>
               {PRIORITIES.map(p => <option key={p} value={p}>{p}</option>)}
             </select>
-          </F>
-          <F id="numberOfPeople" label="Number of People" required error={errors.numberOfPeople}>
+          </FormField>
+          <FormField id="numberOfPeople" label="Number of People" required error={errors.numberOfPeople}>
             <input id="numberOfPeople" type="number" min={1} max={10000} value={form.numberOfPeople}
               onChange={set('numberOfPeople')} className={errors.numberOfPeople ? 'error' : ''} placeholder="e.g. 4" />
-          </F>
+          </FormField>
           {isEdit && (
-            <F id="status" label="Status" required error={errors.status}>
+            <FormField id="status" label="Status" required error={errors.status}>
               <select id="status" value={form.status} onChange={set('status')} className={errors.status ? 'error' : ''}>
                 {STATUSES.map(s => <option key={s} value={s}>{s === 'InProgress' ? 'In Progress' : s}</option>)}
               </select>
-            </F>
+            </FormField>
           )}
-          <F id="description" label="Description" required error={errors.description} className="full">
+          <FormField id="description" label="Description" required error={errors.description}>
             <textarea id="description" value={form.description} onChange={set('description')}
               className={`full ${errors.description ? 'error' : ''}`}
               placeholder="Describe the situation and what assistance is needed (min 20 characters)…"
               style={{ gridColumn: '1 / -1' }} rows={4} />
-          </F>
+          </FormField>
         </div>
       </div>
       <div className="modal-footer">
         <button type="button" id="btn-cancel-form" className="btn btn-secondary" onClick={onCancel}>Cancel</button>
         <button type="submit" id="btn-submit-form" className="btn btn-primary" disabled={submitting}>
-          {submitting ? 'Saving…' : isEdit ? '✓ Save Changes' : '🆘 Submit Request'}
+          {isEdit ? <Save size={16} /> : <Send size={16} />}
+          {submitting ? 'Saving…' : isEdit ? 'Save changes' : 'Submit request'}
         </button>
       </div>
     </form>

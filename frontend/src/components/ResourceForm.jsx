@@ -8,7 +8,7 @@
  *
  * Author: Mamalgaha I.G.W.S. (IT24102615)
  */
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "./ResourceForm.css";
 import {
   RESOURCE_TYPES,

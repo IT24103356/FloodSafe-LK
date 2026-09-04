@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { LoaderCircle, LockKeyhole, ShieldCheck } from 'lucide-react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext.jsx'
 import { loginAdmin } from '../services/approvalService.js'
@@ -31,7 +32,9 @@ export default function AdminLogin() {
   return (
     <section className="workflow-page narrow-page">
       <div className="workflow-panel">
-        <h1>Administrator Sign In</h1>
+        <span className="login-shield"><ShieldCheck size={28} aria-hidden="true" /></span>
+        <span className="fs-eyebrow">Restricted access</span>
+        <h1>Administrator sign in</h1>
         <p>Sign in to review private proposals and manage published records.</p>
         {error && <div className="alert error" role="alert">{error}</div>}
         <form className="workflow-form" onSubmit={submit}>
@@ -43,8 +46,9 @@ export default function AdminLogin() {
             <input type="password" required autoComplete="current-password" value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })} />
           </label>
-          <button className="btn btn-primary" disabled={loading}>
-            {loading ? 'Signing in…' : 'Sign in'}
+          <button className="fs-button primary" disabled={loading}>
+            {loading ? <LoaderCircle className="spin" size={17} /> : <LockKeyhole size={17} />}
+            {loading ? 'Signing in…' : 'Sign in securely'}
           </button>
         </form>
       </div>

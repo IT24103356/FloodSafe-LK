@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import { ArrowLeft, Boxes, CheckCircle2, Send, TentTree } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { PageHeader, StatusBadge } from '../components/common/UIComponents.jsx'
 import { submitResourceRequest, submitSafeCentreRequest } from '../services/approvalService.js'
 
 const requesterDefaults = { requesterName: '', requesterPhone: '' }
@@ -48,11 +50,12 @@ export default function AdditionRequestPage({ type }) {
     return (
       <section className="workflow-page narrow-page">
         <div className="workflow-panel success-panel">
+          <span className="success-mark"><CheckCircle2 size={32} /></span>
           <h1>Request submitted</h1>
           <p>Your proposal is private and will be reviewed by an administrator.</p>
           <div className="reference-number">Reference #{receipt.referenceId}</div>
-          <p>Status: <span className="status-badge pending">{receipt.status}</span></p>
-          <Link className="btn btn-primary" to={isResource ? '/resources' : '/safe-centres'}>Return to public list</Link>
+          <p>Status: <StatusBadge tone="warning">{receipt.status}</StatusBadge></p>
+          <Link className="fs-button primary" to={isResource ? '/resources' : '/safe-centres'}><ArrowLeft size={16} /> Return to public list</Link>
         </div>
       </section>
     )
@@ -60,9 +63,15 @@ export default function AdditionRequestPage({ type }) {
 
   return (
     <section className="workflow-page">
+      <PageHeader
+        eyebrow="Community proposal"
+        title={`Request - Add ${isResource ? 'Resource' : 'Safe Centre'}`}
+        icon={isResource ? Boxes : TentTree}
+        description="Your proposal remains private until an administrator reviews and approves it."
+      />
       <div className="workflow-panel">
-        <h1>Request {isResource ? 'Emergency Resource' : 'Safe Centre'}</h1>
-        <p>This submits a private proposal. It will not appear publicly until an administrator approves it.</p>
+        <h2>Proposal details</h2>
+        <p>Provide accurate contact and location information so the review team can assess the request.</p>
         {error && <div className="alert error" role="alert">{error}</div>}
         <form className="workflow-form request-grid" onSubmit={submit}>
           <Field label="Your name" name="requesterName" form={form} setForm={setForm} required />
@@ -98,8 +107,8 @@ export default function AdditionRequestPage({ type }) {
             <textarea rows="4" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
           </label>
           <div className="full-field form-actions">
-            <Link className="btn btn-ghost" to={isResource ? '/resources' : '/safe-centres'}>Cancel</Link>
-            <button className="btn btn-primary" disabled={loading}>{loading ? 'Submitting…' : 'Submit for review'}</button>
+            <Link className="fs-button secondary" to={isResource ? '/resources' : '/safe-centres'}>Cancel</Link>
+            <button className="fs-button primary" disabled={loading}><Send size={16} /> {loading ? 'Submitting…' : 'Submit for review'}</button>
           </div>
         </form>
       </div>

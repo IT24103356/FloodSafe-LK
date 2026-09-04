@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { CheckCircle2, Clock3, Edit3, Settings2, Trash2, X } from 'lucide-react';
 import { updateAssistanceRequest } from '../services/assistanceRequestService';
 
 function statusLabel(s) { return s === 'InProgress' ? 'In Progress' : s; }
@@ -12,6 +13,16 @@ function formatDate(dt) {
 }
 
 const STATUSES = ['Pending', 'InProgress', 'Resolved'];
+const STATUS_ICONS = { Pending: Clock3, InProgress: Settings2, Resolved: CheckCircle2 };
+
+function DetailItem({ label, value }) {
+  return (
+    <div className="detail-item">
+      <span className="detail-label">{label}</span>
+      <span className="detail-value">{value ?? '—'}</span>
+    </div>
+  );
+}
 
 export default function AssistanceDetails({ request, onClose, onEdit, onDelete, onStatusUpdated }) {
   const [updatingStatus, setUpdatingStatus] = useState(false);
@@ -31,13 +42,6 @@ export default function AssistanceDetails({ request, onClose, onEdit, onDelete, 
     }
   };
 
-  const D = ({ label, value }) => (
-    <div className="detail-item">
-      <span className="detail-label">{label}</span>
-      <span className="detail-value">{value ?? '—'}</span>
-    </div>
-  );
-
   return (
     <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="modal-box" style={{ maxWidth: 680 }}>
@@ -48,7 +52,7 @@ export default function AssistanceDetails({ request, onClose, onEdit, onDelete, 
               <span className="badge badge-sample" style={{ marginTop: 4, display: 'inline-flex' }}>⚠ DEMO / SAMPLE DATA</span>
             )}
           </div>
-          <button className="modal-close" id={`btn-close-detail-${request.id}`} onClick={onClose}>✕</button>
+          <button className="modal-close" id={`btn-close-detail-${request.id}`} onClick={onClose} aria-label="Close details"><X size={18} /></button>
         </div>
 
         <div className="modal-body">
@@ -61,14 +65,14 @@ export default function AssistanceDetails({ request, onClose, onEdit, onDelete, 
 
           {/* Info Grid */}
           <div className="detail-grid">
-            <D label="Request ID" value={`#${request.id}`} />
-            <D label="Requester Name" value={request.requesterName} />
-            <D label="Phone" value={request.phone} />
-            <D label="District" value={request.district} />
-            <D label="Location" value={request.location} />
-            <D label="People Affected" value={`${request.numberOfPeople} ${request.numberOfPeople === 1 ? 'person' : 'people'}`} />
-            <D label="Created" value={formatDate(request.createdAt)} />
-            <D label="Last Updated" value={formatDate(request.updatedAt)} />
+            <DetailItem label="Request ID" value={`#${request.id}`} />
+            <DetailItem label="Requester Name" value={request.requesterName} />
+            <DetailItem label="Phone" value={request.phone} />
+            <DetailItem label="District" value={request.district} />
+            <DetailItem label="Location" value={request.location} />
+            <DetailItem label="People Affected" value={`${request.numberOfPeople} ${request.numberOfPeople === 1 ? 'person' : 'people'}`} />
+            <DetailItem label="Created" value={formatDate(request.createdAt)} />
+            <DetailItem label="Last Updated" value={formatDate(request.updatedAt)} />
           </div>
 
           <div style={{ marginTop: '1rem' }}>
@@ -83,6 +87,9 @@ export default function AssistanceDetails({ request, onClose, onEdit, onDelete, 
               {STATUSES.map((s, i) => (
                 <React.Fragment key={s}>
                   <div className="workflow-step">
+                    {(() => {
+                      const StatusIcon = STATUS_ICONS[s];
+                      return (
                     <button
                       id={`btn-status-${s.toLowerCase()}-${request.id}`}
                       className={`btn btn-sm ${request.status === s ? 'btn-primary' : 'btn-secondary'}`}
@@ -90,8 +97,10 @@ export default function AssistanceDetails({ request, onClose, onEdit, onDelete, 
                       disabled={updatingStatus || request.status === s}
                       style={request.status === s ? { opacity: 1 } : {}}
                     >
-                      {s === 'Pending' ? '⏳' : s === 'InProgress' ? '⚙️' : '✅'} {statusLabel(s)}
+                      <StatusIcon size={15} /> {statusLabel(s)}
                     </button>
+                      );
+                    })()}
                   </div>
                   {i < STATUSES.length - 1 && <span className="workflow-arrow">→</span>}
                 </React.Fragment>
@@ -102,10 +111,10 @@ export default function AssistanceDetails({ request, onClose, onEdit, onDelete, 
         </div>
 
         <div className="modal-footer">
-          <button className="btn btn-danger btn-sm" id={`btn-detail-delete-${request.id}`} onClick={onDelete}>🗑 Delete</button>
+          <button className="btn btn-danger btn-sm" id={`btn-detail-delete-${request.id}`} onClick={onDelete}><Trash2 size={16} /> Delete</button>
           <div style={{ flex: 1 }} />
           <button className="btn btn-secondary" onClick={onClose}>Close</button>
-          <button className="btn btn-primary" id={`btn-detail-edit-${request.id}`} onClick={onEdit}>✏️ Edit</button>
+          <button className="btn btn-primary" id={`btn-detail-edit-${request.id}`} onClick={onEdit}><Edit3 size={16} /> Edit</button>
         </div>
       </div>
     </div>

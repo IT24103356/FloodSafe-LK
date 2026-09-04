@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import IncidentDetails from '../components/IncidentDetails'
+import { ConfirmModal, ErrorState, LoadingState } from '../components/common/UIComponents.jsx'
+import { useToast } from '../components/common/ToastProvider.jsx'
 import { getById, remove } from '../services/incidentService'
 
 export default function IncidentView() {
@@ -10,8 +12,10 @@ export default function IncidentView() {
   const [incident, setIncident] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [message, setMessage] = useState(location.state?.notice || '')
+  const [message] = useState(location.state?.notice || '')
   const [deleting, setDeleting] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
+  const { showToast } = useToast()
 
   useEffect(() => {
     let cancelled = false
@@ -31,16 +35,10 @@ export default function IncidentView() {
   }, [id])
 
   async function handleDelete() {
-    const confirmed = window.confirm(
-      'Delete this incident from the database? This cannot be undone.',
-    )
-    if (!confirmed) {
-      setMessage('Delete cancelled. The incident was not removed.')
-      return
-    }
     setDeleting(true)
     try {
       await remove(id)
+      showToast('Incident deleted successfully.')
       navigate('/incidents', { state: { notice: 'Incident deleted from PostgreSQL.' } })
     } catch (err) {
       setError(err.message)
@@ -50,16 +48,25 @@ export default function IncidentView() {
 
   return (
     <section className="narrow">
-      {loading ? <p className="muted">Loading incident…</p> : null}
-      {error ? <p className="banner error">{error}</p> : null}
+      {loading ? <LoadingState label="Loading incident details…" cards={2} /> : null}
+      {error ? <ErrorState message={error} onRetry={() => window.location.reload()} /> : null}
       {!loading && !error && incident ? (
         <IncidentDetails
           incident={incident}
-          onDelete={handleDelete}
+          onDelete={() => setConfirmDelete(true)}
           deleting={deleting}
           message={message}
         />
       ) : null}
+      <ConfirmModal
+        open={confirmDelete}
+        title="Delete flood incident?"
+        message={`This will permanently delete the report for ${incident?.location || 'this location'}. This action cannot be undone.`}
+        confirmLabel="Delete incident"
+        busy={deleting}
+        onClose={() => setConfirmDelete(false)}
+        onConfirm={handleDelete}
+      />
     </section>
   )
 }

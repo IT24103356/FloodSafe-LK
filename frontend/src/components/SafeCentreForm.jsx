@@ -27,7 +27,7 @@ function validate(fields) {
   if (!fields.district) errors.district = 'District is required.';
   if (!fields.address.trim()) errors.address = 'Address is required.';
 
-  const phoneRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+  const phoneRegex = /^\+?\(?[0-9]{3}\)?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
   if (!fields.contactNumber.trim()) {
     errors.contactNumber = 'Contact number is required.';
   } else if (!phoneRegex.test(fields.contactNumber.trim())) {

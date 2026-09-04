@@ -6,6 +6,7 @@
  * Author: Mamalgaha I.G.W.S. (IT24102615)
  */
 import "./ResourceDetails.css";
+import { Edit3, MapPin, Trash2 } from "lucide-react";
 import { RESOURCE_TYPE_ICONS } from "../services/emergencyResourceService";
 
 const formatDate = (dateString) => {
@@ -52,7 +53,7 @@ const ResourceDetails = ({ resource, onEdit, onDelete, onClose, canManage = fals
           </div>
           <div className="details-badges">
             <span className="details-badge badge-type">{resourceType}</span>
-            <span className="details-badge badge-type">📍 {district}</span>
+            <span className="details-badge badge-type"><MapPin size={14} /> {district}</span>
             {isSample && (
               <span className="details-badge" style={{ background: "rgba(99,102,241,0.2)", color: "#a5b4fc", border: "1px solid rgba(99,102,241,0.3)" }}>
                 SAMPLE DATA
@@ -119,7 +120,7 @@ const ResourceDetails = ({ resource, onEdit, onDelete, onClose, canManage = fals
             </div>
             <div className="details-field">
               <span className="details-field-label">District</span>
-              <span className="details-field-value">📍 {district}</span>
+              <span className="details-field-value"><MapPin size={14} /> {district}</span>
             </div>
             <div className="details-field">
               <span className="details-field-label">Location</span>
@@ -193,14 +194,14 @@ const ResourceDetails = ({ resource, onEdit, onDelete, onClose, canManage = fals
             className="btn-details-edit"
             onClick={() => { onClose(); onEdit(resource); }}
           >
-            ✏ Edit Resource
+            <Edit3 size={16} /> Edit Resource
           </button>
           <button
             id={`btn-details-delete-${id}`}
             className="btn-details-delete"
             onClick={() => { onClose(); onDelete(resource); }}
           >
-            🗑 Delete
+            <Trash2 size={16} /> Delete
           </button>
         </div>}
       </aside>

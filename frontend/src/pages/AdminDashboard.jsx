@@ -1,4 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
+import { Boxes, Check, ClipboardCheck, Send, TentTree, X } from 'lucide-react'
+import { ConfirmModal, EmptyState, ErrorState, LoadingState, Modal, PageHeader, StatusBadge } from '../components/common/UIComponents.jsx'
+import { useToast } from '../components/common/ToastProvider.jsx'
 import { approveRequest, getAdminRequests, rejectRequest } from '../services/approvalService.js'
 
 const hiddenKeys = new Set(['id', 'status', 'submittedAt', 'reviewedAt', 'reviewedByEmail', 'rejectionReason', 'publishedResourceId', 'publishedCentreId'])
@@ -9,22 +12,22 @@ function labelFor(key) {
 
 function RequestCard({ request, type, onReviewed }) {
   const [working, setWorking] = useState(false)
+  const [reviewAction, setReviewAction] = useState(null)
+  const [reason, setReason] = useState('')
+  const { showToast } = useToast()
   const fields = Object.entries(request).filter(([key, value]) => !hiddenKeys.has(key) && value !== null && value !== '')
 
   async function review(action) {
-    const reason = action === 'reject'
-      ? window.prompt('Enter a short rejection reason:')
-      : null
-    if (action === 'reject' && !reason) return
-    if (action === 'approve' && !window.confirm('Approve and publish this proposal?')) return
-
     setWorking(true)
     try {
       if (action === 'approve') await approveRequest(type, request.id)
       else await rejectRequest(type, request.id, reason)
+      showToast(action === 'approve' ? 'Request approved and published.' : 'Request rejected.', 'success')
+      setReviewAction(null)
+      setReason('')
       onReviewed()
     } catch (error) {
-      window.alert(error.message)
+      showToast(error.message, 'error')
     } finally {
       setWorking(false)
     }
@@ -37,7 +40,7 @@ function RequestCard({ request, type, onReviewed }) {
           <strong>Request #{request.id}</strong>
           <span>Submitted {new Date(request.submittedAt).toLocaleString()}</span>
         </div>
-        <span className={`status-badge ${request.status.toLowerCase()}`}>{request.status}</span>
+        <StatusBadge tone={request.status === 'Approved' ? 'success' : request.status === 'Rejected' ? 'danger' : 'warning'}>{request.status}</StatusBadge>
       </div>
       <div className="approval-fields">
         {fields.map(([key, value]) => (
@@ -50,10 +53,39 @@ function RequestCard({ request, type, onReviewed }) {
       {request.rejectionReason && <div className="alert error">Reason: {request.rejectionReason}</div>}
       {request.status === 'Pending' && (
         <div className="approval-actions">
-          <button className="btn btn-danger" disabled={working} onClick={() => review('reject')}>Reject</button>
-          <button className="btn btn-primary" disabled={working} onClick={() => review('approve')}>Approve & publish</button>
+          <button className="fs-button danger" disabled={working} onClick={() => setReviewAction('reject')}><X size={16} /> Reject</button>
+          <button className="fs-button primary" disabled={working} onClick={() => setReviewAction('approve')}><Check size={16} /> Approve & publish</button>
         </div>
       )}
+      <ConfirmModal
+        open={reviewAction === 'approve'}
+        title="Approve and publish?"
+        message="This creates a new public record from the proposal. The action is transactional and cannot be reviewed twice."
+        confirmLabel="Approve & publish"
+        danger={false}
+        busy={working}
+        onClose={() => setReviewAction(null)}
+        onConfirm={() => review('approve')}
+      />
+      <Modal
+        open={reviewAction === 'reject'}
+        title="Reject proposal"
+        description="Give the requester record a short, clear reason."
+        onClose={() => setReviewAction(null)}
+        size="small"
+        footer={(
+          <>
+            <button className="fs-button secondary" type="button" onClick={() => setReviewAction(null)}>Cancel</button>
+            <button className="fs-button danger" type="button" disabled={working || reason.trim().length < 3} onClick={() => review('reject')}>
+              <X size={16} /> Reject request
+            </button>
+          </>
+        )}
+      >
+        <label className="workflow-form">Rejection reason
+          <textarea rows="4" maxLength="500" value={reason} onChange={(event) => setReason(event.target.value)} />
+        </label>
+      </Modal>
     </article>
   )
 }
@@ -81,13 +113,17 @@ export default function AdminDashboard() {
 
   return (
     <section className="workflow-page admin-dashboard">
+      <PageHeader
+        eyebrow="Administrator workspace"
+        title="Private approval queue"
+        icon={ClipboardCheck}
+        description="Review private addition proposals. Requester contact details are restricted to authenticated administrators."
+      />
       <div className="workflow-panel">
-        <h1>Private Approval Queue</h1>
-        <p>Requester contact details on this page are available only to authenticated administrators.</p>
         <div className="dashboard-filters">
           <div className="tab-buttons">
-            <button className={type === 'resource' ? 'active' : ''} onClick={() => setType('resource')}>Resources</button>
-            <button className={type === 'safe-centre' ? 'active' : ''} onClick={() => setType('safe-centre')}>Safe centres</button>
+            <button className={type === 'resource' ? 'active' : ''} onClick={() => setType('resource')}><Boxes size={16} /> Resources</button>
+            <button className={type === 'safe-centre' ? 'active' : ''} onClick={() => setType('safe-centre')}><TentTree size={16} /> Safe centres</button>
           </div>
           <select value={status} onChange={(e) => setStatus(e.target.value)}>
             <option value="">All statuses</option>
@@ -96,9 +132,9 @@ export default function AdminDashboard() {
             <option>Rejected</option>
           </select>
         </div>
-        {error && <div className="alert error">{error}</div>}
-        {loading ? <p>Loading private requests…</p> : requests.length === 0 ? (
-          <div className="empty-state"><p>No requests match this filter.</p></div>
+        {error && <ErrorState message={error} onRetry={load} />}
+        {loading ? <LoadingState label="Loading private proposals…" cards={3} /> : requests.length === 0 ? (
+          <EmptyState icon={Send} title="No proposals found" message="No requests match the selected type and status." />
         ) : (
           <div className="approval-list">
             {requests.map((request) => (

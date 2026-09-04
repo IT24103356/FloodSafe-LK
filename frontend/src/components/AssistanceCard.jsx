@@ -1,4 +1,5 @@
 import React from 'react';
+import { Clock3, Edit3, Eye, MapPin, Tag, Trash2, Users } from 'lucide-react';
 
 function priorityClass(p) {
   return `badge badge-${p?.toLowerCase()}`;
@@ -41,25 +42,25 @@ export default function AssistanceCard({ request, onView, onEdit, onDelete }) {
 
       <div className="card-meta">
         <div className="card-meta-row">
-          <span>📍</span>
+          <MapPin size={15} aria-hidden="true" />
           <span>{location}</span>
         </div>
         <div className="card-meta-row">
-          <span>🏷️</span>
+          <Tag size={15} aria-hidden="true" />
           <span className="badge badge-type">{requestType}</span>
-          <span style={{ color: '#8ba3c7', marginLeft: 4 }}>·</span>
-          <span>👥 {numberOfPeople} {numberOfPeople === 1 ? 'person' : 'people'}</span>
+          <span className="meta-divider">·</span>
+          <span><Users size={15} aria-hidden="true" /> {numberOfPeople} {numberOfPeople === 1 ? 'person' : 'people'}</span>
         </div>
       </div>
 
       <p className="card-desc">{description}</p>
 
       <div className="card-footer" onClick={(e) => e.stopPropagation()}>
-        <span className="card-date">🕐 {formatDate(createdAt)}</span>
+        <span className="card-date"><Clock3 size={14} aria-hidden="true" /> {formatDate(createdAt)}</span>
         <div className="card-actions">
-          <button id={`btn-view-${id}`} className="btn btn-secondary btn-sm" onClick={(e) => { e.stopPropagation(); onView(); }} aria-label="View details">👁 View</button>
-          <button id={`btn-edit-${id}`} className="btn btn-secondary btn-sm" onClick={(e) => { e.stopPropagation(); onEdit(); }} aria-label="Edit request">✏️ Edit</button>
-          <button id={`btn-delete-${id}`} className="btn btn-danger btn-sm" onClick={(e) => { e.stopPropagation(); onDelete(); }} aria-label="Delete request">🗑</button>
+          <button id={`btn-view-${id}`} className="btn btn-secondary btn-sm" onClick={(e) => { e.stopPropagation(); onView(); }} aria-label="View details"><Eye size={15} /> View</button>
+          <button id={`btn-edit-${id}`} className="btn btn-secondary btn-sm" onClick={(e) => { e.stopPropagation(); onEdit(); }} aria-label="Edit request"><Edit3 size={15} /> Edit</button>
+          <button id={`btn-delete-${id}`} className="btn btn-danger btn-sm" onClick={(e) => { e.stopPropagation(); onDelete(); }} aria-label="Delete request"><Trash2 size={15} /></button>
         </div>
       </div>
     </article>

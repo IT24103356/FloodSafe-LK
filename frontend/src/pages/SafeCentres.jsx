@@ -4,12 +4,15 @@
  * Author: Maddegoda M.V.S. | IT24101739
  */
 import React, { useState, useEffect, useCallback } from 'react';
+import { Building2, DoorOpen, Plus, Send, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext.jsx';
 import SafeCentreCard from '../components/SafeCentreCard.jsx';
 import SafeCentreFilters from '../components/SafeCentreFilters.jsx';
 import SafeCentreForm from '../components/SafeCentreForm.jsx';
 import SafeCentreDetails from '../components/SafeCentreDetails.jsx';
+import { EmptyState, ErrorState, LoadingState, PageHeader, StatCard } from '../components/common/UIComponents.jsx';
+import { useToast } from '../components/common/ToastProvider.jsx';
 import {
   getSafeCentres,
   createSafeCentre,
@@ -17,19 +20,6 @@ import {
   deleteSafeCentre,
 } from '../services/safeCentreService.js';
 import '../styles/safecentres.css';
-
-// ── Toast helper ─────────────────────────────────────────────────────────────
-function useToasts() {
-  const [toasts, setToasts] = useState([]);
-
-  const addToast = useCallback((message, type = 'success') => {
-    const id = Date.now();
-    setToasts(prev => [...prev, { id, message, type }]);
-    setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 4000);
-  }, []);
-
-  return { toasts, addToast };
-}
 
 // ── Confirm Dialog ────────────────────────────────────────────────────────────
 function ConfirmDialog({ centre, onConfirm, onCancel, loading }) {
@@ -84,7 +74,7 @@ function SafeCentresPage() {
   const [editCentre, setEditCentre]     = useState(null);  // null = closed, {} = create, {id,...} = edit
   const [deleteCentre, setDeleteCentre] = useState(null);
 
-  const { toasts, addToast } = useToasts();
+  const { showToast: addToast } = useToast();
 
   // ── Fetch ──────────────────────────────────────────────────────────────────
   const fetchCentres = useCallback(async () => {
@@ -198,68 +188,47 @@ function SafeCentresPage() {
 
       {/* Page content */}
       <div className="page-wrapper">
-        {/* Hero */}
-        <section className="page-hero">
-          <h1>🏠 Safe Centre Management</h1>
-          <p>
-            Manage flood safe centres across Sri Lanka — track capacity, availability,
-            and facilities in real time.
-          </p>
-        </section>
-
-        {/* Add button */}
-        <div className="page-actions">
-          <button
+        <PageHeader
+          eyebrow="Shelter network"
+          title="Safe centres"
+          icon={Building2}
+          description="Find approved flood shelters, current capacity, facilities, and contact information."
+          actions={<button
             id="btn-add-centre"
-            className="btn btn-primary"
+            className="fs-button primary"
             onClick={() => auth.isAdmin ? setEditCentre({}) : navigate('/request-safe-centre')}
           >
-            {auth.isAdmin ? '➕ Add Safe Centre' : '✉ Request Safe Centre'}
-          </button>
-        </div>
+            {auth.isAdmin ? <Plus size={17} /> : <Send size={17} />}
+            {auth.isAdmin ? 'Add Safe Centre' : 'Request - Add Safe Centre'}
+          </button>}
+        />
 
         {/* Filters */}
         <SafeCentreFilters filters={filters} onChange={setFilters} />
 
         {/* Stats bar */}
         {!loading && !apiError && (
-          <div className="stats-bar">
-            <div className="stat-chip">Total <span className="chip-val">{totalCentres}</span></div>
-            <div className="stat-chip">Open <span className="chip-val" style={{ color: '#34d399' }}>{openCentres}</span></div>
-            <div className="stat-chip">Total Capacity <span className="chip-val">{totalCap.toLocaleString()}</span></div>
-            <div className="stat-chip">Occupied <span className="chip-val">{totalOcc.toLocaleString()}</span></div>
-            <div className="stat-chip">Available Spaces <span className="chip-val" style={{ color: 'var(--clr-primary-light)' }}>{totalFree.toLocaleString()}</span></div>
+          <div className="fs-stats-grid">
+            <StatCard icon={Building2} label="Total centres" value={totalCentres} />
+            <StatCard icon={DoorOpen} label="Open centres" value={openCentres} tone="success" />
+            <StatCard icon={Users} label="Total capacity" value={totalCap.toLocaleString()} detail={`${totalOcc.toLocaleString()} occupied`} />
+            <StatCard icon={DoorOpen} label="Available spaces" value={totalFree.toLocaleString()} tone="secondary" />
           </div>
         )}
 
         {/* API Error */}
         {apiError && (
-          <div className="alert error" role="alert">
-            ⛔ {apiError}
-            <button
-              style={{ marginLeft: 'auto', background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', fontSize: '0.85rem', textDecoration: 'underline' }}
-              onClick={fetchCentres}
-            >
-              Retry
-            </button>
-          </div>
+          <ErrorState message="Safe-centre information could not be loaded." onRetry={fetchCentres} />
         )}
 
         {/* Loading */}
         {loading && (
-          <div className="loading-wrap" aria-live="polite">
-            <div className="spinner" />
-            <span>Loading safe centres…</span>
-          </div>
+          <LoadingState label="Loading approved safe centres…" cards={4} />
         )}
 
         {/* Empty state */}
         {!loading && !apiError && centres.length === 0 && (
-          <div className="empty-state">
-            <div className="empty-icon">🏠</div>
-            <div className="empty-title">No safe centres found</div>
-            <p>Try adjusting your search or filters, or add a new centre.</p>
-          </div>
+          <EmptyState icon={Building2} title="No safe centres found" message="Try adjusting the search or availability filters." />
         )}
 
         {/* Cards grid */}
@@ -279,14 +248,6 @@ function SafeCentresPage() {
         )}
       </div>
 
-      {/* Toasts */}
-      <div className="toast-container" aria-live="polite">
-        {toasts.map(t => (
-          <div key={t.id} className={`toast ${t.type}`} role="alert">
-            {t.message}
-          </div>
-        ))}
-      </div>
     </>
   );
 }

@@ -4,6 +4,7 @@
  * Author: Maddegoda M.V.S. | IT24101739
  */
 import React from 'react';
+import { Edit3, Eye, MapPin, Trash2 } from 'lucide-react';
 
 function getOccupancyClass(pct) {
   if (pct >= 90) return 'high';
@@ -37,7 +38,7 @@ function SafeCentreCard({ centre, onView, onEdit, onDelete, canManage = false })
         <div className="sc-card-title-group">
           <div className="sc-card-name" title={centre.name}>{centre.name}</div>
           <div className="sc-card-district">
-            <span>📍</span>
+            <MapPin size={14} aria-hidden="true" />
             {centre.district} District
           </div>
         </div>
@@ -103,7 +104,7 @@ function SafeCentreCard({ centre, onView, onEdit, onDelete, canManage = false })
           onClick={() => onView(centre)}
           aria-label={`View ${centre.name}`}
         >
-          👁 View
+          <Eye size={15} /> View
         </button>
         {canManage && (
           <>
@@ -113,7 +114,7 @@ function SafeCentreCard({ centre, onView, onEdit, onDelete, canManage = false })
               onClick={() => onEdit(centre)}
               aria-label={`Edit ${centre.name}`}
             >
-              ✏️ Edit
+              <Edit3 size={15} /> Edit
             </button>
             <button
               id={`btn-delete-${centre.id}`}
@@ -121,7 +122,7 @@ function SafeCentreCard({ centre, onView, onEdit, onDelete, canManage = false })
               onClick={() => onDelete(centre)}
               aria-label={`Delete ${centre.name}`}
             >
-              🗑 Delete
+              <Trash2 size={15} /> Delete
             </button>
           </>
         )}

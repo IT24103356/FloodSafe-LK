@@ -4,6 +4,7 @@
  * Author: Maddegoda M.V.S. | IT24101739
  */
 import React from 'react';
+import { Edit3, MapPin, Trash2 } from 'lucide-react';
 
 function getOccupancyClass(pct) {
   if (pct >= 90) return 'high';
@@ -45,7 +46,7 @@ function SafeCentreDetails({ centre, onClose, onEdit, onDelete, canManage = fals
               {centre.isSample && <span className="sample-badge">DEMO DATA</span>}
             </div>
             <div style={{ fontSize: '0.82rem', color: 'var(--clr-primary-light)', marginTop: '0.25rem' }}>
-              📍 {centre.district} District
+              <MapPin size={15} /> {centre.district} District
             </div>
           </div>
           <button className="modal-close" onClick={onClose} aria-label="Close details">✕</button>
@@ -137,8 +138,8 @@ function SafeCentreDetails({ centre, onClose, onEdit, onDelete, canManage = fals
           <button id="btn-details-close" className="btn btn-ghost" onClick={onClose}>Close</button>
           {canManage && (
             <>
-              <button id="btn-details-delete" className="btn btn-danger" onClick={() => { onClose(); onDelete(centre); }}>🗑 Delete</button>
-              <button id="btn-details-edit" className="btn btn-primary" onClick={() => { onClose(); onEdit(centre); }}>✏️ Edit Centre</button>
+              <button id="btn-details-delete" className="btn btn-danger" onClick={() => { onClose(); onDelete(centre); }}><Trash2 size={16} /> Delete</button>
+              <button id="btn-details-edit" className="btn btn-primary" onClick={() => { onClose(); onEdit(centre); }}><Edit3 size={16} /> Edit Centre</button>
             </>
           )}
         </div>

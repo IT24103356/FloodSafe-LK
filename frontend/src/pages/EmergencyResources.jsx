@@ -14,12 +14,15 @@
  * Author: Mamalgaha I.G.W.S. (IT24102615)
  */
 import { useState, useEffect, useCallback, useRef } from "react";
+import { AlertTriangle, Boxes, CheckCircle2, PackagePlus, Search, Send, ShieldAlert, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import "./EmergencyResources.css";
 import ResourceCard    from "../components/ResourceCard";
 import ResourceForm    from "../components/ResourceForm";
 import ResourceDetails from "../components/ResourceDetails";
+import { EmptyState, ErrorState, LoadingState, PageHeader, StatCard } from "../components/common/UIComponents";
+import { useToast } from "../components/common/ToastProvider";
 import {
   getEmergencyResources,
   deleteEmergencyResource,
@@ -27,31 +30,6 @@ import {
   SRI_LANKA_DISTRICTS,
   RESOURCE_STATUSES,
 } from "../services/emergencyResourceService";
-
-// ── Toast Hook ────────────────────────────────────────────────────────────────
-const useToast = () => {
-  const [toasts, setToasts] = useState([]);
-  const timers = useRef(new Map());
-
-  useEffect(() => {
-    return () => {
-      timers.current.forEach(clearTimeout);
-      timers.current.clear();
-    };
-  }, []);
-
-  const addToast = useCallback((message, type = "info") => {
-    const id = (globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`);
-    setToasts(prev => [...prev, { id, message, type }]);
-    const timeoutId = setTimeout(() => {
-      setToasts(prev => prev.filter(t => t.id !== id));
-      timers.current.delete(id);
-    }, 4000);
-    timers.current.set(id, timeoutId);
-  }, []);
-
-  return { toasts, addToast };
-};
 
 // ── Stats Calculator ──────────────────────────────────────────────────────────
 const calcStats = (resources) => ({
@@ -84,7 +62,7 @@ const EmergencyResources = () => {
   const [deleteTarget, setDeleteTarget] = useState(null);   // resource being deleted
   const [deleting,     setDeleting]     = useState(false);
 
-  const { toasts, addToast } = useToast();
+  const { showToast: addToast } = useToast();
   const searchTimeout = useRef(null);
 
   // ── Fetch ─────────────────────────────────────────────────────────────────
@@ -145,7 +123,7 @@ const EmergencyResources = () => {
   const handleDeleteConfirm = async () => {
     if (!deleteTarget) return;
     setDeleting(true);
-    const { success, error: err } = await deleteEmergencyResource(deleteTarget.id);
+    const { error: err } = await deleteEmergencyResource(deleteTarget.id);
     setDeleting(false);
 
     if (err) {
@@ -176,66 +154,33 @@ const EmergencyResources = () => {
   return (
     <div className="er-page">
 
-      {/* ── Hero Header ─────────────────────────────────────────────────── */}
-      <header className="er-hero">
-        <div className="er-hero-content">
-          <div className="er-hero-text">
-            <h1>🆘 Emergency Resource Management</h1>
-            <p>FloodSafe LK — Track, monitor, and manage emergency resources across Sri Lanka</p>
-          </div>
-          <button
+      <PageHeader
+        eyebrow="Emergency inventory"
+        title="Emergency resources"
+        icon={Boxes}
+        description="Browse approved supplies, locations, quantities, and current stock conditions."
+        actions={<button
             id="btn-add-resource"
-            className="btn-add-resource"
+            className="fs-button primary"
             onClick={() => auth.isAdmin ? openCreate() : navigate("/request-resource")}
           >
-            {auth.isAdmin ? "➕ Add Resource" : "✉ Request Resource"}
-          </button>
-        </div>
-      </header>
+            {auth.isAdmin ? <PackagePlus size={17} /> : <Send size={17} />}
+            {auth.isAdmin ? "Add Resource" : "Request - Add Resource"}
+          </button>}
+      />
 
       {/* ── Stats Bar ───────────────────────────────────────────────────── */}
-      <div className="er-stats">
-        <div className="stat-chip">
-          <span className="stat-chip-icon">📦</span>
-          <div className="stat-chip-info">
-            <span className="stat-chip-value">{stats.total}</span>
-            <span className="stat-chip-label">Total Resources</span>
-          </div>
-        </div>
-        <div className="stat-chip stat-available">
-          <span className="stat-chip-icon">✅</span>
-          <div className="stat-chip-info">
-            <span className="stat-chip-value">{stats.available}</span>
-            <span className="stat-chip-label">Available</span>
-          </div>
-        </div>
-        <div className="stat-chip stat-lowstock">
-          <span className="stat-chip-icon">⚠</span>
-          <div className="stat-chip-info">
-            <span className="stat-chip-value">{stats.lowStock}</span>
-            <span className="stat-chip-label">Low Stock</span>
-          </div>
-        </div>
-        <div className="stat-chip stat-depleted">
-          <span className="stat-chip-icon">🔴</span>
-          <div className="stat-chip-info">
-            <span className="stat-chip-value">{stats.depleted}</span>
-            <span className="stat-chip-label">Depleted</span>
-          </div>
-        </div>
-        <div className="stat-chip">
-          <span className="stat-chip-icon">🟣</span>
-          <div className="stat-chip-info">
-            <span className="stat-chip-value">{stats.reserved}</span>
-            <span className="stat-chip-label">Reserved</span>
-          </div>
-        </div>
+      <div className="fs-stats-grid">
+        <StatCard icon={Boxes} label="Total resources" value={stats.total} />
+        <StatCard icon={CheckCircle2} label="Available" value={stats.available} tone="success" />
+        <StatCard icon={AlertTriangle} label="Low stock" value={stats.lowStock} tone="warning" />
+        <StatCard icon={ShieldAlert} label="Depleted" value={stats.depleted} tone="danger" detail={`${stats.reserved} reserved`} />
       </div>
 
       {/* ── Filter / Search Bar ─────────────────────────────────────────── */}
       <div className="er-controls">
         <div className="search-wrapper">
-          <span className="search-icon">🔍</span>
+          <span className="search-icon"><Search size={17} aria-hidden="true" /></span>
           <input
             id="search-input"
             type="text"
@@ -286,7 +231,7 @@ const EmergencyResources = () => {
             className="btn-clear-filters"
             onClick={clearFilters}
           >
-            ✕ Clear Filters
+            <X size={16} /> Clear filters
           </button>
         )}
       </div>
@@ -305,37 +250,21 @@ const EmergencyResources = () => {
 
         {/* Loading */}
         {loading && (
-          <div className="er-loading" aria-live="polite">
-            <div className="loading-spinner" />
-            <span>Loading emergency resources...</span>
-          </div>
+          <LoadingState label="Loading emergency inventory…" cards={4} />
         )}
 
         {/* Error */}
         {!loading && error && (
-          <div className="er-error" role="alert">
-            ⚠ {error}
-            <br />
-            <button
-              style={{ marginTop: "0.75rem", background: "none", border: "none", color: "#93c5fd", cursor: "pointer", textDecoration: "underline" }}
-              onClick={() => fetchResources()}
-            >
-              Retry
-            </button>
-          </div>
+          <ErrorState message="Emergency resource records could not be loaded." onRetry={() => fetchResources()} />
         )}
 
         {/* Empty State */}
         {!loading && !error && resources.length === 0 && (
-          <div className="er-empty">
-            <div className="er-empty-icon">📦</div>
-            <h3>No resources found</h3>
-            <p>
-              {hasFilters
-                ? "Try adjusting your search or filters."
-                : "Click \"Add Resource\" to register the first emergency resource."}
-            </p>
-          </div>
+          <EmptyState
+            icon={Boxes}
+            title="No emergency resources found"
+            message={hasFilters ? "Try adjusting the search or stock filters." : "Approved resource records will appear here."}
+          />
         )}
 
         {/* Resource Grid */}
@@ -412,15 +341,6 @@ const EmergencyResources = () => {
           </div>
         </div>
       )}
-
-      {/* ── Toast Notifications ─────────────────────────────────────────── */}
-      <div className="toast-container" aria-live="polite">
-        {toasts.map(t => (
-          <div key={t.id} className={`toast toast-${t.type}`} role="status">
-            {t.message}
-          </div>
-        ))}
-      </div>
 
     </div>
   );

@@ -9,7 +9,17 @@
  * Author: Mamalgaha I.G.W.S. (IT24102615)
  */
 import "./ResourceCard.css";
-import { RESOURCE_TYPE_ICONS } from "../services/emergencyResourceService";
+import { Bed, Droplets, Edit3, Eye, Flashlight, HeartPulse, Package, Soup, SprayCan, Trash2 } from "lucide-react";
+
+const resourceIcons = {
+  "Drinking Water": Droplets,
+  "Food": Soup,
+  "First Aid": HeartPulse,
+  "Blankets": Bed,
+  "Hygiene Kits": SprayCan,
+  "Flashlights": Flashlight,
+  "Other": Package,
+};
 
 const formatDate = (dateString) => {
   const d = new Date(dateString);
@@ -27,10 +37,10 @@ const getStatusClass = (status, isLowStock) => {
 };
 
 const getStockBadge = (status, isLowStock) => {
-  if (status === "Depleted")  return { cls: "badge-depleted",  label: "🔴 Depleted" };
-  if (status === "Reserved")  return { cls: "badge-reserved",  label: "🟣 Reserved" };
-  if (isLowStock)             return { cls: "badge-lowstock",  label: "⚠ Low Stock" };
-  return                             { cls: "badge-available", label: "✓ Available" };
+  if (status === "Depleted")  return { cls: "badge-depleted",  label: "Depleted" };
+  if (status === "Reserved")  return { cls: "badge-reserved",  label: "Reserved" };
+  if (isLowStock)             return { cls: "badge-lowstock",  label: "Low Stock" };
+  return                             { cls: "badge-available", label: "Available" };
 };
 
 const getProgressPercent = (quantity, minRequired) => {
@@ -46,7 +56,7 @@ const ResourceCard = ({ resource, onView, onEdit, onDelete, canManage = false })
     isLowStock, isSample
   } = resource;
 
-  const icon       = RESOURCE_TYPE_ICONS[resourceType] || "📦";
+  const ResourceIcon = resourceIcons[resourceType] || Package;
   const statusCls  = getStatusClass(status, isLowStock);
   const badge      = getStockBadge(status, isLowStock);
   const progressPct = getProgressPercent(quantity, minimumRequired);
@@ -57,7 +67,7 @@ const ResourceCard = ({ resource, onView, onEdit, onDelete, canManage = false })
       {/* ── Header ──────────────────────────────────────────────────────── */}
       <div className="card-header">
         <div className="card-icon-name">
-          <span className="card-icon" aria-label={resourceType}>{icon}</span>
+          <span className="card-icon" aria-label={resourceType}><ResourceIcon size={22} /></span>
           <h3 className="card-name">{resourceName}</h3>
         </div>
         <div className="badge-group">
@@ -112,7 +122,7 @@ const ResourceCard = ({ resource, onView, onEdit, onDelete, canManage = false })
       */}
       {isLowStock && (
         <div className="low-stock-warning" role="alert">
-          ⚠ Low stock — quantity at or below minimum threshold
+          Low stock — quantity at or below minimum threshold
           ({quantity} ≤ {minimumRequired} {unit})
         </div>
       )}
@@ -125,7 +135,7 @@ const ResourceCard = ({ resource, onView, onEdit, onDelete, canManage = false })
           onClick={() => onView(resource)}
           aria-label={`View details of ${resourceName}`}
         >
-          👁 View
+          <Eye size={15} /> View
         </button>
         {canManage && (
           <>
@@ -135,7 +145,7 @@ const ResourceCard = ({ resource, onView, onEdit, onDelete, canManage = false })
               onClick={() => onEdit(resource)}
               aria-label={`Edit ${resourceName}`}
             >
-              ✏ Edit
+              <Edit3 size={15} /> Edit
             </button>
             <button
               id={`btn-delete-${id}`}
@@ -143,7 +153,7 @@ const ResourceCard = ({ resource, onView, onEdit, onDelete, canManage = false })
               onClick={() => onDelete(resource)}
               aria-label={`Delete ${resourceName}`}
             >
-              🗑
+              <Trash2 size={15} />
             </button>
           </>
         )}
