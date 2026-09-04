@@ -2,12 +2,14 @@ import { useState } from 'react'
 import { AlertCircle, LoaderCircle, LockKeyhole, ShieldCheck } from 'lucide-react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext.jsx'
+import { useToast } from '../components/common/ToastProvider.jsx'
 import { loginAdmin } from '../services/approvalService.js'
 
 export default function AdminLogin() {
   const auth = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
+  const { showToast } = useToast()
   const [form, setForm] = useState({ email: '', password: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -16,18 +18,33 @@ export default function AdminLogin() {
 
   async function submit(event) {
     event.preventDefault()
+    const email = form.email.trim()
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      const message = 'Enter a valid administrator email address.'
+      setError(message)
+      showToast(message, 'error')
+      return
+    }
+    if (!form.password) {
+      const message = 'Enter your administrator password.'
+      setError(message)
+      showToast(message, 'error')
+      return
+    }
+
     setLoading(true)
     setError('')
     try {
-      const session = await loginAdmin(form)
+      const session = await loginAdmin({ ...form, email })
       auth.login(session)
       navigate(location.state?.from ?? '/admin', { replace: true })
     } catch (err) {
-      setError(
+      const message =
         err.message === 'Failed to fetch'
           ? 'Unable to reach the authentication service. Check that the API is running.'
-          : err.message || 'The email or password is incorrect.',
-      )
+          : err.message || 'The email or password is incorrect.'
+      setError(message)
+      showToast(message, 'error')
       setForm((current) => ({ ...current, password: '' }))
     } finally {
       setLoading(false)
@@ -50,7 +67,7 @@ export default function AdminLogin() {
             </div>
           </div>
         )}
-        <form className="workflow-form" onSubmit={submit}>
+        <form className="workflow-form" onSubmit={submit} noValidate>
           <label>Email
             <input type="email" required autoComplete="username" value={form.email} aria-invalid={Boolean(error)}
               onChange={(e) => { setError(''); setForm({ ...form, email: e.target.value }) }} />
