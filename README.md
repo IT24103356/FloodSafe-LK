@@ -219,3 +219,61 @@ Backend: `Models/Incident.cs`, `DTOs/*Incident*.cs`, `Controllers/IncidentsContr
 - [ ] 400 validation
 - [ ] 404 missing id
 - [ ] 500 only on unexpected server/database failure; UI shows a friendly message
+
+---
+
+# Member 2 — Safe Centre Management
+
+**Member:** Maddegoda M.V.S.  
+**Student ID:** IT24101739  
+**Role:** Safe Centre Management Developer  
+
+This feature provides end-to-end management for flood safe centres and emergency shelters across Sri Lanka.
+
+## Architecture
+
+```
+React (Vite)  →  ASP.NET Core REST API  →  EF Core  →  PostgreSQL
+```
+
+All safe centre data is permanently stored in PostgreSQL in the `SafeCentres` table.
+
+## Feature Files (Member 2)
+
+- **Frontend:**
+  - `src/pages/SafeCentres.jsx` — Safe centres directory, statistics, search/filter, and modal orchestrations
+  - `src/components/SafeCentreCard.jsx` — Card display with capacity bar and quick actions
+  - `src/components/SafeCentreForm.jsx` — Controlled form with real-time field validation
+  - `src/components/SafeCentreDetails.jsx` — Detailed modal view of a shelter
+  - `src/components/SafeCentreFilters.jsx` — Sri Lanka 25-district filter, search bar, and availability toggle
+  - `src/styles/safecentres.css` — Responsive glassmorphism styling
+  - `src/services/safeCentreService.js` — Async fetch service for all CRUD operations
+
+- **Backend:**
+  - `Models/SafeCentre.cs` — Entity with data annotations and `[NotMapped] AvailableSpaces`
+  - `DTOs/SafeCentreDto.cs`, `DTOs/CreateSafeCentreDto.cs`, `DTOs/UpdateSafeCentreDto.cs` — Request/response contracts with validations
+  - `Controllers/SafeCentresController.cs` — REST API endpoints
+  - `Services/ISafeCentreService.cs`, `Services/SafeCentreService.cs` — Business logic and data access
+  - `Data/ApplicationDbContext.cs` — `SafeCentres` DbSet and model configuration
+  - `Data/SafeCentreSeeder.cs` — 10 seeded Sri Lankan shelters
+  - `Migrations/*_AddSafeCentres.cs` — EF Core migration for `SafeCentres` table
+
+## API Contract — Safe Centres
+
+Base URL: `http://localhost:5203/api/safecentres`
+
+| Method | Endpoint | Description | Status Codes |
+|---|---|---|---|
+| **POST** | `/api/safecentres` | Create a safe centre | `201 Created`, `400 Bad Request` |
+| **GET** | `/api/safecentres` | List safe centres (filters: `search`, `district`, `availability`) | `200 OK` |
+| **GET** | `/api/safecentres/{id}` | Get safe centre by ID | `200 OK`, `404 Not Found` |
+| **PUT** | `/api/safecentres/{id}` | Update existing safe centre | `200 OK`, `400 Bad Request`, `404 Not Found` |
+| **DELETE** | `/api/safecentres/{id}` | Delete safe centre | `204 No Content`, `404 Not Found` |
+
+### Business Rules & Validations
+- `Capacity` must be greater than 0.
+- `CurrentOccupancy` must be 0 or more and cannot exceed `Capacity`.
+- `AvailableSpaces` is dynamically calculated (`Capacity - CurrentOccupancy`) and never stored directly in the database.
+- `Name`, `District`, `Address`, and `ContactNumber` are required.
+- Contact numbers are validated against standard phone formats.
+

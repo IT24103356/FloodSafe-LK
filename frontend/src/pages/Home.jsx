@@ -19,6 +19,9 @@ export default function Home() {
           <Link className="btn ghost" to="/incidents">
             Browse reports
           </Link>
+          <Link className="btn secondary" to="/safe-centres">
+            Find Safe Centres
+          </Link>
         </div>
       </div>
 
@@ -27,6 +30,7 @@ export default function Home() {
         <ul>
           <li>Households deciding whether a road is still passable</li>
           <li>Neighbours checking water level and how many people are affected nearby</li>
+          <li>Families finding nearby emergency shelters and available capacity</li>
           <li>Local volunteers triaging reports by district, type and severity</li>
         </ul>
         <p className="disclaimer">

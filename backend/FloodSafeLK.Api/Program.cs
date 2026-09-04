@@ -18,6 +18,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 
 builder.Services.AddScoped<IIncidentService, IncidentService>();
+builder.Services.AddScoped<ISafeCentreService, SafeCentreService>();
 
 const string devCors = "DevCors";
 const string productionCors = "ProductionCors";
@@ -54,7 +55,7 @@ app.UseExceptionHandler(errorApp =>
         {
             context.Response.Headers.Append("Access-Control-Allow-Origin", "http://localhost:5173");
         }
-        await context.Response.WriteAsJsonAsync(new)
+        await context.Response.WriteAsJsonAsync(new
         {
             type = "https://httpstatuses.com/500",
             title = "A server error occurred. Please try again later.",
@@ -89,6 +90,7 @@ using (var scope = app.Services.CreateScope())
     {
         await db.Database.MigrateAsync();
         await IncidentSeeder.SeedAsync(db);
+        await SafeCentreSeeder.SeedAsync(db);
     }
     catch (Exception ex)
     {
