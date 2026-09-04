@@ -65,6 +65,41 @@ npm run dev
 
 The Vite app runs at http://localhost:5173 and calls `VITE_API_BASE_URL` from `.env.development` (`http://localhost:5203`).
 
+## Admin approval workflow
+
+Public visitors can browse approved emergency resources and safe centres and can submit private addition proposals. They cannot create, update, or delete published records. Only a JWT-authenticated user in the `Admin` role can manage published records or read and review proposals.
+
+Configure authentication values outside source control:
+
+```powershell
+cd backend/FloodSafeLK.Api
+dotnet user-secrets set "Jwt:Key" "A-LONG-RANDOM-KEY-AT-LEAST-32-CHARACTERS"
+dotnet user-secrets set "Admin:Email" "admin@example.com"
+dotnet user-secrets set "Admin:Password" "YOUR-STRONG-ADMIN-PASSWORD"
+dotnet ef database update
+```
+
+For production, use `Jwt__Key`, `Admin__Email`, and `Admin__Password` environment variables or a managed secret store. There is no public registration API. Identity stores only the password hash in PostgreSQL.
+
+Access rules:
+
+- Public: `GET /api/emergencyresources`, `GET /api/safecentres`
+- Public: `POST /api/resource-addition-requests`, `POST /api/safe-centre-addition-requests`
+- Admin only: published resource/safe-centre `POST`, `PUT`, and `DELETE`
+- Admin only: all `/api/admin/*-addition-requests` list, detail, approve, and reject endpoints
+- Admin login: `POST /api/auth/login`; the frontend keeps the short-lived token in `sessionStorage`
+
+Review endpoints are:
+
+- `POST /api/admin/resource-addition-requests/{id}/approve`
+- `POST /api/admin/resource-addition-requests/{id}/reject` with `{ "reason": "..." }`
+- `POST /api/admin/safe-centre-addition-requests/{id}/approve`
+- `POST /api/admin/safe-centre-addition-requests/{id}/reject` with `{ "reason": "..." }`
+
+Approval creates exactly one published record inside a database transaction. Rejection publishes nothing. Reviewing an already reviewed request returns `409 Conflict`. Requester contact details are present only in admin responses.
+
+Demo sequence: start both apps, submit a proposal from the Resources or Safe Centres tab, sign in through **Admin Login**, open **Admin Queue**, and approve or reject it. Approved proposals then appear in the corresponding public list.
+
 ## CORS
 
 | Environment | Policy | Allowed origins |
