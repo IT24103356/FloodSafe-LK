@@ -1,5 +1,6 @@
 using FloodSafeLK.Api.DTOs;
 using FloodSafeLK.Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FloodSafeLK.Api.Controllers;
@@ -53,6 +54,7 @@ public class SafeCentresController : ControllerBase
     /// Creates a new safe centre. Returns 400 if validation fails.
     /// Business rule: CurrentOccupancy must not exceed Capacity.
     /// </summary>
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [ProducesResponseType(typeof(SafeCentreDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -80,6 +82,7 @@ public class SafeCentresController : ControllerBase
     /// Updates an existing safe centre. Returns 400 if validation fails, 404 if not found.
     /// Business rule: CurrentOccupancy must not exceed Capacity.
     /// </summary>
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     [ProducesResponseType(typeof(SafeCentreDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -110,6 +113,7 @@ public class SafeCentresController : ControllerBase
     /// <summary>
     /// Deletes a safe centre by ID. Returns 204 No Content, or 404 if not found.
     /// </summary>
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

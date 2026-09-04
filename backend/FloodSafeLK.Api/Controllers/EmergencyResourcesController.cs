@@ -1,5 +1,6 @@
 using FloodSafeLK.Api.DTOs;
 using FloodSafeLK.Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FloodSafeLK.Api.Controllers;
@@ -65,6 +66,7 @@ public class EmergencyResourcesController : ControllerBase
 
     // ─── POST /api/emergencyresources ────────────────────────────────────────
     /// <summary>Creates a new emergency resource.</summary>
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<ActionResult<EmergencyResourceDto>> Create(
         [FromBody] CreateEmergencyResourceDto dto)
@@ -80,6 +82,7 @@ public class EmergencyResourcesController : ControllerBase
 
     // ─── PUT /api/emergencyresources/{id} ────────────────────────────────────
     /// <summary>Updates quantity, status, location, minimum required, and notes.</summary>
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     public async Task<ActionResult<EmergencyResourceDto>> Update(
         int id,
@@ -101,6 +104,7 @@ public class EmergencyResourcesController : ControllerBase
 
     // ─── DELETE /api/emergencyresources/{id} ─────────────────────────────────
     /// <summary>Permanently deletes a resource from PostgreSQL.</summary>
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {

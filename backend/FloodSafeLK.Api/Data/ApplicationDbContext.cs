@@ -1,9 +1,10 @@
 using FloodSafeLK.Api.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace FloodSafeLK.Api.Data;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
@@ -14,9 +15,13 @@ public class ApplicationDbContext : DbContext
     public DbSet<EmergencyResource> EmergencyResources => Set<EmergencyResource>();
     public DbSet<SafeCentre> SafeCentres => Set<SafeCentre>();
     public DbSet<AssistanceRequest> AssistanceRequests => Set<AssistanceRequest>();
+    public DbSet<ResourceAdditionRequest> ResourceAdditionRequests => Set<ResourceAdditionRequest>();
+    public DbSet<SafeCentreAdditionRequest> SafeCentreAdditionRequests => Set<SafeCentreAdditionRequest>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         var incident = modelBuilder.Entity<Incident>();
 
         incident.HasKey(e => e.Id);
@@ -84,5 +89,25 @@ public class ApplicationDbContext : DbContext
         assistanceRequest.HasIndex(r => r.RequestType);
         assistanceRequest.HasIndex(r => r.Priority);
         assistanceRequest.HasIndex(r => r.Status);
+
+        ConfigureAdditionRequest(modelBuilder.Entity<ResourceAdditionRequest>());
+        ConfigureAdditionRequest(modelBuilder.Entity<SafeCentreAdditionRequest>());
+
+        modelBuilder.Entity<ResourceAdditionRequest>()
+            .Property(r => r.Quantity).HasPrecision(18, 2);
+        modelBuilder.Entity<ResourceAdditionRequest>()
+            .Property(r => r.MinimumRequired).HasPrecision(18, 2);
+    }
+
+    private static void ConfigureAdditionRequest<T>(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<T> request)
+        where T : AdditionRequestBase
+    {
+        request.Property(r => r.Status).HasDefaultValue(AdditionRequestStatuses.Pending);
+        request.HasIndex(r => r.Status);
+        request.HasIndex(r => r.SubmittedAt);
+        request.HasOne(r => r.ReviewedByUser)
+            .WithMany()
+            .HasForeignKey(r => r.ReviewedByUserId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }
