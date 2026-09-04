@@ -1,0 +1,157 @@
+:root {
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --fs-xs: .75rem;
+  --fs-sm: .875rem;
+  --fs-base: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.35rem;
+  --fs-2xl: clamp(1.8rem, 4vw, 2.75rem);
+  --fs-hero: clamp(2.5rem, 7vw, 5rem);
+
+  --space-1: .25rem;
+  --space-2: .5rem;
+  --space-3: .75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  --radius-sm: .55rem;
+  --radius-md: .8rem;
+  --radius-lg: 1.1rem;
+  --radius-xl: 1.5rem;
+  --radius-pill: 999px;
+
+  --primary: #0c4a8a;
+  --primary-hover: #0a3c72;
+  --primary-soft: #e8f2ff;
+  --secondary: #0f8b8d;
+  --secondary-hover: #0b6f71;
+  --secondary-soft: #e4f7f6;
+  --success: #15803d;
+  --success-soft: #e9f8ef;
+  --warning: #b45309;
+  --warning-soft: #fff4df;
+  --danger: #c32f3d;
+  --danger-hover: #a61f2d;
+  --danger-soft: #fff0f1;
+  --info: #2563eb;
+  --info-soft: #eaf1ff;
+
+  --page: #f4f7fb;
+  --page-elevated: #edf3f9;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --surface-muted: #f7f9fc;
+  --surface-overlay: rgba(4, 17, 34, .62);
+  --text: #142438;
+  --text-muted: #5d6f83;
+  --text-subtle: #8291a3;
+  --border: #dce5ee;
+  --border-strong: #c5d2df;
+  --focus: #2684ff;
+  --shadow-sm: 0 2px 8px rgba(15, 42, 70, .06);
+  --shadow-md: 0 12px 32px rgba(15, 42, 70, .10);
+  --shadow-lg: 0 24px 60px rgba(8, 31, 56, .16);
+  --header-bg: rgba(255, 255, 255, .88);
+  --hero-overlay: linear-gradient(90deg, rgba(3, 21, 41, .92), rgba(5, 43, 71, .72) 58%, rgba(8, 55, 75, .34));
+
+  --risk-low: #15803d;
+  --risk-medium: #b77908;
+  --risk-high: #dc6b19;
+  --risk-critical: #c32f3d;
+  --status-pending: #b77908;
+  --status-progress: #2563eb;
+  --status-resolved: #15803d;
+
+  --transition-fast: 160ms ease;
+  --transition-base: 240ms ease;
+  --content-max: 1240px;
+
+  /* Compatibility aliases for existing feature modules. */
+  --ink: var(--text);
+  --muted: var(--text-muted);
+  --paper: var(--page);
+  --card: var(--surface);
+  --line: var(--border);
+  --teal: var(--secondary);
+  --teal-deep: #096365;
+  --teal-dark: #096365;
+  --teal-soft: var(--secondary-soft);
+  --rain: var(--primary);
+  --warn: var(--warning);
+  --ok: var(--success);
+  --accent: var(--primary);
+  --accent-hover: var(--primary-hover);
+  --accent-light: #4ea1ff;
+  --bg-primary: var(--page);
+  --bg-secondary: var(--page-elevated);
+  --bg-card: var(--surface);
+  --bg-input: var(--surface);
+  --bg-hover: var(--surface-muted);
+  --text-primary: var(--text);
+  --text-secondary: var(--text-muted);
+  --text-muted: #5d6f83;
+  --border-color: var(--border);
+  --border-glow: rgba(12, 74, 138, .25);
+  --shadow: var(--shadow-md);
+  --shadow-card: var(--shadow-md);
+  --shadow-btn: var(--shadow-sm);
+  --radius: var(--radius-lg);
+  --border-radius-lg: var(--radius-lg);
+  --clr-primary: var(--primary);
+  --clr-primary-light: var(--secondary);
+  --clr-danger: var(--danger);
+  --pending: var(--status-pending);
+  --inprogress: var(--status-progress);
+  --resolved: var(--status-resolved);
+  --critical: var(--risk-critical);
+  --high: var(--risk-high);
+  --medium: var(--risk-medium);
+  --low: var(--risk-low);
+}
+
+:root[data-theme="dark"] {
+  --primary: #65aefc;
+  --primary-hover: #8cc3ff;
+  --primary-soft: #102c49;
+  --secondary: #41c6c7;
+  --secondary-hover: #6fd8d9;
+  --secondary-soft: #10393c;
+  --success: #50d47c;
+  --success-soft: #123624;
+  --warning: #f5b94c;
+  --warning-soft: #3b2d13;
+  --danger: #ff6b78;
+  --danger-hover: #ff8c96;
+  --danger-soft: #411b25;
+  --info: #71a9ff;
+  --info-soft: #172f53;
+
+  --page: #07111f;
+  --page-elevated: #091725;
+  --surface: #0d1b2a;
+  --surface-raised: #122337;
+  --surface-muted: #102033;
+  --surface-overlay: rgba(1, 7, 14, .78);
+  --text: #eef6ff;
+  --text-muted: #a8b8ca;
+  --text-subtle: #74879b;
+  --border: #22364b;
+  --border-strong: #314a63;
+  --focus: #80bdff;
+  --shadow-sm: 0 3px 12px rgba(0, 0, 0, .18);
+  --shadow-md: 0 15px 38px rgba(0, 0, 0, .26);
+  --shadow-lg: 0 28px 70px rgba(0, 0, 0, .38);
+  --header-bg: rgba(7, 17, 31, .88);
+  --hero-overlay: linear-gradient(90deg, rgba(3, 10, 20, .94), rgba(5, 26, 45, .78) 60%, rgba(7, 37, 53, .48));
+
+  --teal-deep: var(--secondary);
+  --teal-dark: var(--secondary);
+  --accent-light: #8cc3ff;
+  --text-muted: #a8b8ca;
+  --border-glow: rgba(101, 174, 252, .28);
+}

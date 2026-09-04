@@ -1,0 +1,308 @@
+/* Incident module */
+.card-list {
+  gap: var(--space-5);
+}
+
+.incident-card {
+  position: relative;
+  padding: var(--space-5) !important;
+  overflow: hidden;
+  border-left: 4px solid var(--primary) !important;
+}
+
+.incident-card.risk-low { border-left-color: var(--risk-low) !important; }
+.incident-card.risk-medium { border-left-color: var(--risk-medium) !important; }
+.incident-card.risk-high { border-left-color: var(--risk-high) !important; }
+.incident-card.risk-critical { border-left-color: var(--risk-critical) !important; }
+
+.card-place {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: .35rem;
+  color: var(--text);
+  font-size: var(--fs-lg);
+}
+
+.card-place > span {
+  grid-column: 2;
+}
+
+.card-meta dt {
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+}
+
+.card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  color: var(--primary);
+}
+
+.incident-form {
+  padding: clamp(20px, 4vw, 34px);
+}
+
+.incident-form .form-grid {
+  gap: var(--space-5);
+}
+
+.details-card {
+  padding: clamp(20px, 4vw, 34px) !important;
+}
+
+/* Existing feature dialogs inherit the new surface system. */
+.modal-box,
+.form-modal,
+.confirm-dialog,
+.details-drawer {
+  color: var(--text) !important;
+  background: var(--surface-raised) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-xl) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.modal-header,
+.modal-footer,
+.form-header,
+.form-footer,
+.details-header {
+  color: var(--text) !important;
+  background: var(--surface-raised) !important;
+  border-color: var(--border) !important;
+}
+
+.modal-close,
+.form-close,
+.details-close {
+  color: var(--text-muted) !important;
+  background: var(--surface-muted) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-md) !important;
+}
+
+.modal-body,
+.form-body,
+.details-body {
+  color: var(--text) !important;
+  background: var(--surface-raised) !important;
+}
+
+.form-section,
+.detail-section {
+  border-color: var(--border) !important;
+}
+
+.form-section-title,
+.detail-section-title,
+.details-field-label,
+.detail-label,
+.form-label {
+  color: var(--text-muted) !important;
+}
+
+.field-error,
+.form-error,
+.form-api-error {
+  color: var(--danger) !important;
+}
+
+/* Safe centre module */
+.centres-grid,
+.resource-grid,
+.cards-grid {
+  gap: var(--space-5) !important;
+}
+
+.sc-card {
+  padding: var(--space-5) !important;
+}
+
+.sc-card-address,
+.sc-card-district,
+.card-meta-row,
+.card-date,
+.details-field-value {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+
+.sc-facilities {
+  gap: .4rem;
+}
+
+.capacity-bar-fill.low { background: linear-gradient(90deg, var(--success), var(--secondary)) !important; }
+.capacity-bar-fill.medium { background: linear-gradient(90deg, var(--warning), #e59a25) !important; }
+
+/* Emergency inventory */
+.resource-card {
+  padding: var(--space-5) !important;
+}
+
+.card-icon,
+.details-icon {
+  display: grid;
+  place-items: center;
+  color: var(--primary) !important;
+  background: var(--primary-soft) !important;
+}
+
+.badge-available { color: var(--success) !important; background: var(--success-soft) !important; }
+.badge-lowstock { color: var(--warning) !important; background: var(--warning-soft) !important; }
+.badge-depleted { color: var(--danger) !important; background: var(--danger-soft) !important; }
+.badge-reserved { color: var(--info) !important; background: var(--info-soft) !important; }
+
+.details-badge,
+.stock-badge-large,
+.stock-status-badge {
+  color: var(--text-muted) !important;
+  background: var(--surface-muted) !important;
+  border-color: var(--border) !important;
+}
+
+.details-field-value {
+  color: var(--text) !important;
+}
+
+.details-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+}
+
+/* Assistance module */
+.a-card {
+  padding: var(--space-5) !important;
+}
+
+.a-card .card-title {
+  color: var(--text) !important;
+}
+
+.a-card .card-id,
+.a-card .card-desc,
+.a-card .card-date {
+  color: var(--text-muted) !important;
+}
+
+.a-card .card-footer {
+  background: transparent !important;
+  border-color: var(--border) !important;
+}
+
+.card-meta-row > span {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+}
+
+.meta-divider {
+  color: var(--text-subtle);
+  margin-left: .25rem;
+}
+
+.badge-critical { color: var(--danger) !important; background: var(--danger-soft) !important; }
+.badge-high { color: var(--risk-high) !important; background: var(--warning-soft) !important; }
+.badge-medium, .badge-pending { color: var(--warning) !important; background: var(--warning-soft) !important; }
+.badge-low, .badge-resolved { color: var(--success) !important; background: var(--success-soft) !important; }
+.badge-inprogress, .badge-type { color: var(--info) !important; background: var(--info-soft) !important; }
+
+.status-workflow .btn {
+  gap: .35rem;
+}
+
+/* Auth, proposals, approval queue */
+.workflow-page {
+  width: min(100%, 1080px) !important;
+  padding-top: 0 !important;
+}
+
+.narrow-page {
+  width: min(100%, 580px) !important;
+  padding-top: var(--space-8) !important;
+}
+
+.login-shield,
+.success-mark {
+  width: 58px;
+  height: 58px;
+  margin-bottom: var(--space-4);
+  display: grid;
+  place-items: center;
+  color: var(--primary);
+  background: var(--primary-soft);
+  border-radius: 18px;
+}
+
+.success-mark {
+  color: var(--success);
+  background: var(--success-soft);
+}
+
+.success-panel {
+  text-align: center;
+}
+
+.success-panel .success-mark,
+.success-panel .fs-badge {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.workflow-panel h2 {
+  margin-top: 0;
+}
+
+.approval-card-heading,
+.approval-fields {
+  color: var(--text);
+}
+
+.tab-buttons button {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  color: var(--text-muted) !important;
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+.tab-buttons button.active {
+  color: #fff !important;
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+}
+
+:root[data-theme="dark"] .sample-card {
+  background: color-mix(in srgb, var(--surface) 88%, var(--warning-soft)) !important;
+}
+
+@media (max-width: 700px) {
+  .details-head,
+  .card-top,
+  .approval-card-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .approval-fields,
+  .detail-grid,
+  .details-grid,
+  .card-meta {
+    grid-template-columns: 1fr !important;
+  }
+
+  .status-workflow {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .workflow-arrow {
+    transform: rotate(90deg);
+  }
+}
