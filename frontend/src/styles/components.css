@@ -3,6 +3,49 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  color: var(--text);
+  background: transparent;
+}
+
+:root[data-theme="dark"] {
+  /* Restore aliases overwritten by legacy feature styles loaded before this file. */
+  --ink: var(--text);
+  --muted: var(--text-muted);
+  --paper: var(--page);
+  --card: var(--surface);
+  --line: var(--border);
+  --teal: var(--secondary);
+  --teal-deep: var(--secondary);
+  --rain: var(--primary);
+  --warn: var(--warning);
+  --ok: var(--success);
+  --bg-primary: var(--page);
+  --bg-secondary: var(--page-elevated);
+  --bg-surface: var(--surface-muted);
+  --bg-card: var(--surface);
+  --bg-card-hover: var(--surface-raised);
+  --bg-glass: rgba(13, 27, 42, .94);
+  --text-primary: var(--text);
+  --text-secondary: var(--text-muted);
+  --border-subtle: var(--border);
+  --accent: var(--primary);
+  --accent-dark: var(--primary-hover);
+  --clr-primary: var(--primary);
+  --clr-primary-light: var(--secondary);
+}
+
+:root[data-theme="dark"],
+:root[data-theme="dark"] body,
+:root[data-theme="dark"] #root,
+:root[data-theme="dark"] .app-shell,
+:root[data-theme="dark"] .app-main {
+  background-color: var(--page) !important;
+}
+
+:root[data-theme="dark"] body {
+  background-image:
+    radial-gradient(circle at 8% 0%, rgba(101, 174, 252, .10), transparent 28rem),
+    radial-gradient(circle at 100% 18%, rgba(65, 198, 199, .08), transparent 26rem) !important;
 }
 
 .app-header-shell {
