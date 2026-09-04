@@ -39,7 +39,7 @@ const getProgressPercent = (quantity, minRequired) => {
   return Math.min(Math.max(pct, 0), 100);
 };
 
-const ResourceCard = ({ resource, onView, onEdit, onDelete }) => {
+const ResourceCard = ({ resource, onView, onEdit, onDelete, canManage = false }) => {
   const {
     id, resourceName, resourceType, district, location,
     quantity, unit, minimumRequired, status, lastUpdated,
@@ -127,22 +127,26 @@ const ResourceCard = ({ resource, onView, onEdit, onDelete }) => {
         >
           👁 View
         </button>
-        <button
-          id={`btn-edit-${id}`}
-          className="btn-card btn-card-edit"
-          onClick={() => onEdit(resource)}
-          aria-label={`Edit ${resourceName}`}
-        >
-          ✏ Edit
-        </button>
-        <button
-          id={`btn-delete-${id}`}
-          className="btn-card btn-card-delete"
-          onClick={() => onDelete(resource)}
-          aria-label={`Delete ${resourceName}`}
-        >
-          🗑
-        </button>
+        {canManage && (
+          <>
+            <button
+              id={`btn-edit-${id}`}
+              className="btn-card btn-card-edit"
+              onClick={() => onEdit(resource)}
+              aria-label={`Edit ${resourceName}`}
+            >
+              ✏ Edit
+            </button>
+            <button
+              id={`btn-delete-${id}`}
+              className="btn-card btn-card-delete"
+              onClick={() => onDelete(resource)}
+              aria-label={`Delete ${resourceName}`}
+            >
+              🗑
+            </button>
+          </>
+        )}
       </div>
 
       {/* ── Footer ──────────────────────────────────────────────────────── */}

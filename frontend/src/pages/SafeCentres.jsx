@@ -4,6 +4,8 @@
  * Author: Maddegoda M.V.S. | IT24101739
  */
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../auth/AuthContext.jsx';
 import SafeCentreCard from '../components/SafeCentreCard.jsx';
 import SafeCentreFilters from '../components/SafeCentreFilters.jsx';
 import SafeCentreForm from '../components/SafeCentreForm.jsx';
@@ -67,6 +69,8 @@ function ConfirmDialog({ centre, onConfirm, onCancel, loading }) {
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
 function SafeCentresPage() {
+  const auth = useAuth();
+  const navigate = useNavigate();
   const [centres, setCentres] = useState([]);
   const [loading, setLoading] = useState(true);
   const [apiError, setApiError] = useState('');
@@ -170,6 +174,7 @@ function SafeCentresPage() {
           onClose={() => setViewCentre(null)}
           onEdit={c => { setViewCentre(null); setEditCentre(c); }}
           onDelete={c => { setViewCentre(null); setDeleteCentre(c); }}
+          canManage={auth.isAdmin}
         />
       )}
 
@@ -207,9 +212,9 @@ function SafeCentresPage() {
           <button
             id="btn-add-centre"
             className="btn btn-primary"
-            onClick={() => setEditCentre({})}
+            onClick={() => auth.isAdmin ? setEditCentre({}) : navigate('/request-safe-centre')}
           >
-            ➕ Add Safe Centre
+            {auth.isAdmin ? '➕ Add Safe Centre' : '✉ Request Safe Centre'}
           </button>
         </div>
 
@@ -267,6 +272,7 @@ function SafeCentresPage() {
                 onView={setViewCentre}
                 onEdit={setEditCentre}
                 onDelete={setDeleteCentre}
+                canManage={auth.isAdmin}
               />
             ))}
           </div>

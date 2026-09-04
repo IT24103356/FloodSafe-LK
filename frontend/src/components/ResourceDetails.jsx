@@ -21,7 +21,7 @@ const getProgressPercent = (quantity, minRequired) => {
   return Math.min(Math.max((quantity / (minRequired * 2)) * 100, 0), 100);
 };
 
-const ResourceDetails = ({ resource, onEdit, onDelete, onClose }) => {
+const ResourceDetails = ({ resource, onEdit, onDelete, onClose, canManage = false }) => {
   const {
     id, resourceName, resourceType, district, location,
     quantity, unit, minimumRequired, status, lastUpdated,
@@ -187,7 +187,7 @@ const ResourceDetails = ({ resource, onEdit, onDelete, onClose }) => {
         </div>
 
         {/* ── Footer Actions ───────────────────────────────────────────── */}
-        <div className="details-actions">
+        {canManage && <div className="details-actions">
           <button
             id={`btn-details-edit-${id}`}
             className="btn-details-edit"
@@ -202,7 +202,7 @@ const ResourceDetails = ({ resource, onEdit, onDelete, onClose }) => {
           >
             🗑 Delete
           </button>
-        </div>
+        </div>}
       </aside>
     </div>
   );

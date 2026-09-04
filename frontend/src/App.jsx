@@ -1,6 +1,15 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { useAuth } from './auth/AuthContext.jsx'
 
 export default function App() {
+  const auth = useAuth()
+  const navigate = useNavigate()
+
+  function logout() {
+    auth.logout()
+    navigate('/')
+  }
+
   return (
     <div className="app-shell">
       <header className="site-header">
@@ -16,6 +25,14 @@ export default function App() {
           <NavLink to="/safe-centres">Safe Centres</NavLink>
           <NavLink to="/resources">Emergency Resources</NavLink>
           <NavLink to="/assistance">Assistance Requests</NavLink>
+          {auth.isAdmin ? (
+            <>
+              <NavLink to="/admin">Admin Queue</NavLink>
+              <button className="nav-button" onClick={logout}>Logout</button>
+            </>
+          ) : (
+            <NavLink to="/admin/login">Admin Login</NavLink>
+          )}
         </nav>
       </header>
       <main>

@@ -3,6 +3,7 @@
  * Communicates with the ASP.NET Core backend at /api/safecentres
  * Member 2: Maddegoda M.V.S. | IT24101739
  */
+import { clearStoredSession, getStoredToken } from '../auth/AuthContext.jsx';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5203';
 const API_BASE = `${BASE_URL}/api/safecentres`;
@@ -10,6 +11,7 @@ const API_BASE = `${BASE_URL}/api/safecentres`;
 // ── Helper ─────────────────────────────────────────────────────────────────
 
 async function handleResponse(response) {
+  if (response.status === 401) clearStoredSession();
   if (!response.ok) {
     let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
     try {
@@ -32,6 +34,14 @@ async function handleResponse(response) {
   if (response.status === 204) return null;
 
   return response.json();
+}
+
+function adminHeaders() {
+  const token = getStoredToken();
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
 }
 
 // ── GET ALL (with optional filters) ───────────────────────────────────────
@@ -80,7 +90,7 @@ export async function createSafeCentre(data) {
   try {
     const response = await fetch(API_BASE, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: adminHeaders(),
       body: JSON.stringify(data),
     });
     return await handleResponse(response);
@@ -100,7 +110,7 @@ export async function updateSafeCentre(id, data) {
   try {
     const response = await fetch(`${API_BASE}/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: adminHeaders(),
       body: JSON.stringify(data),
     });
     return await handleResponse(response);
@@ -119,6 +129,7 @@ export async function deleteSafeCentre(id) {
   try {
     const response = await fetch(`${API_BASE}/${id}`, {
       method: 'DELETE',
+      headers: adminHeaders(),
     });
     return await handleResponse(response);
   } catch (error) {

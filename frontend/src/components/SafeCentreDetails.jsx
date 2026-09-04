@@ -11,7 +11,7 @@ function getOccupancyClass(pct) {
   return 'low';
 }
 
-function SafeCentreDetails({ centre, onClose, onEdit, onDelete }) {
+function SafeCentreDetails({ centre, onClose, onEdit, onDelete, canManage = false }) {
   if (!centre) return null;
 
   const pct = centre.capacity > 0
@@ -135,8 +135,12 @@ function SafeCentreDetails({ centre, onClose, onEdit, onDelete }) {
         {/* Footer */}
         <div className="modal-footer">
           <button id="btn-details-close" className="btn btn-ghost" onClick={onClose}>Close</button>
-          <button id="btn-details-delete" className="btn btn-danger" onClick={() => { onClose(); onDelete(centre); }}>🗑 Delete</button>
-          <button id="btn-details-edit" className="btn btn-primary" onClick={() => { onClose(); onEdit(centre); }}>✏️ Edit Centre</button>
+          {canManage && (
+            <>
+              <button id="btn-details-delete" className="btn btn-danger" onClick={() => { onClose(); onDelete(centre); }}>🗑 Delete</button>
+              <button id="btn-details-edit" className="btn btn-primary" onClick={() => { onClose(); onEdit(centre); }}>✏️ Edit Centre</button>
+            </>
+          )}
         </div>
       </div>
     </div>

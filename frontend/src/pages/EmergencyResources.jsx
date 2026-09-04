@@ -14,6 +14,8 @@
  * Author: Mamalgaha I.G.W.S. (IT24102615)
  */
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../auth/AuthContext";
 import "./EmergencyResources.css";
 import ResourceCard    from "../components/ResourceCard";
 import ResourceForm    from "../components/ResourceForm";
@@ -62,6 +64,8 @@ const calcStats = (resources) => ({
 
 // ── Main Component ────────────────────────────────────────────────────────────
 const EmergencyResources = () => {
+  const auth = useAuth();
+  const navigate = useNavigate();
   const [resources,    setResources]    = useState([]);
   const [loading,      setLoading]      = useState(true);
   const [error,        setError]        = useState("");
@@ -182,9 +186,9 @@ const EmergencyResources = () => {
           <button
             id="btn-add-resource"
             className="btn-add-resource"
-            onClick={openCreate}
+            onClick={() => auth.isAdmin ? openCreate() : navigate("/request-resource")}
           >
-            ➕ Add Resource
+            {auth.isAdmin ? "➕ Add Resource" : "✉ Request Resource"}
           </button>
         </div>
       </header>
@@ -344,6 +348,7 @@ const EmergencyResources = () => {
                 onView={setViewTarget}
                 onEdit={openEdit}
                 onDelete={setDeleteTarget}
+                canManage={auth.isAdmin}
               />
             ))}
           </div>
@@ -369,6 +374,7 @@ const EmergencyResources = () => {
           onEdit={openEdit}
           onDelete={setDeleteTarget}
           onClose={() => setViewTarget(null)}
+          canManage={auth.isAdmin}
         />
       )}
 

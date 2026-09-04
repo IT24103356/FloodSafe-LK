@@ -11,7 +11,7 @@ function getOccupancyClass(pct) {
   return 'low';
 }
 
-function SafeCentreCard({ centre, onView, onEdit, onDelete }) {
+function SafeCentreCard({ centre, onView, onEdit, onDelete, canManage = false }) {
   const pct = centre.capacity > 0
     ? Math.min(100, Math.round((centre.currentOccupancy / centre.capacity) * 100))
     : 0;
@@ -105,22 +105,26 @@ function SafeCentreCard({ centre, onView, onEdit, onDelete }) {
         >
           👁 View
         </button>
-        <button
-          id={`btn-edit-${centre.id}`}
-          className="btn btn-secondary btn-sm"
-          onClick={() => onEdit(centre)}
-          aria-label={`Edit ${centre.name}`}
-        >
-          ✏️ Edit
-        </button>
-        <button
-          id={`btn-delete-${centre.id}`}
-          className="btn btn-danger btn-sm"
-          onClick={() => onDelete(centre)}
-          aria-label={`Delete ${centre.name}`}
-        >
-          🗑 Delete
-        </button>
+        {canManage && (
+          <>
+            <button
+              id={`btn-edit-${centre.id}`}
+              className="btn btn-secondary btn-sm"
+              onClick={() => onEdit(centre)}
+              aria-label={`Edit ${centre.name}`}
+            >
+              ✏️ Edit
+            </button>
+            <button
+              id={`btn-delete-${centre.id}`}
+              className="btn btn-danger btn-sm"
+              onClick={() => onDelete(centre)}
+              aria-label={`Delete ${centre.name}`}
+            >
+              🗑 Delete
+            </button>
+          </>
+        )}
       </div>
     </article>
   );
