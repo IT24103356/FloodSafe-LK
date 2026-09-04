@@ -11,6 +11,7 @@ public class ApplicationDbContext : DbContext
     }
 
     public DbSet<Incident> Incidents => Set<Incident>();
+    public DbSet<EmergencyResource> EmergencyResources => Set<EmergencyResource>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -34,5 +35,22 @@ public class ApplicationDbContext : DbContext
         incident.HasIndex(e => e.Severity);
         incident.HasIndex(e => e.IncidentType);
         incident.HasIndex(e => e.DateTime);
+
+        // EmergencyResource Configuration (Member 3 - IT24102615)
+        var resource = modelBuilder.Entity<EmergencyResource>();
+        resource.HasKey(e => e.Id);
+        resource.Property(e => e.ResourceName).IsRequired().HasMaxLength(200);
+        resource.Property(e => e.ResourceType).IsRequired().HasMaxLength(100);
+        resource.Property(e => e.District).IsRequired().HasMaxLength(100);
+        resource.Property(e => e.Location).IsRequired().HasMaxLength(300);
+        resource.Property(e => e.Quantity).HasColumnType("decimal(18,2)");
+        resource.Property(e => e.Unit).IsRequired().HasMaxLength(50);
+        resource.Property(e => e.MinimumRequired).HasColumnType("decimal(18,2)");
+        resource.Property(e => e.Status).IsRequired().HasMaxLength(50);
+        resource.Property(e => e.Notes).HasMaxLength(1000);
+
+        resource.HasIndex(e => e.District);
+        resource.HasIndex(e => e.ResourceType);
+        resource.HasIndex(e => e.Status);
     }
 }

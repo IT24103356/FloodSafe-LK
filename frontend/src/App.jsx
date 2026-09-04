@@ -13,13 +13,14 @@ export default function App() {
           </NavLink>
           <NavLink to="/incidents">Incidents</NavLink>
           <NavLink to="/report">Report</NavLink>
+          <NavLink to="/resources">Emergency Resources</NavLink>
         </nav>
       </header>
       <main>
         <Outlet />
       </main>
       <footer className="site-footer">
-        <p>Flood Incident Management · Member: Kowdu.A.B (IT24103356)</p>
+        <p>FloodSafe LK Platform · Member 1: Kowdu.A.B (IT24103356) | Member 3: Mamalgaha I.G.W.S. (IT24102615 - Emergency Resources)</p>
         <p>Demonstration prototype — not official disaster information.</p>
       </footer>
     </div>
