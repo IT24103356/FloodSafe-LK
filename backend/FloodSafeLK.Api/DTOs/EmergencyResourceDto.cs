@@ -30,5 +30,7 @@ public class EmergencyResourceDto
     /// <summary>
     /// Human-readable stock status label for the UI.
     /// </summary>
-    public string StockStatus => IsLowStock ? "Low Stock" : "Available";
+    public string StockStatus => Status is "Depleted" or "Reserved"
+        ? Status
+        : (IsLowStock ? "Low Stock" : "Available");
 }
