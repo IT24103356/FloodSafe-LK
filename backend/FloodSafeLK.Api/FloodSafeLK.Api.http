@@ -1,0 +1,52 @@
+@FloodSafeLK.Api_HostAddress = http://localhost:5203
+
+### List incidents
+GET {{FloodSafeLK.Api_HostAddress}}/api/incidents
+Accept: application/json
+
+### Search and filter
+GET {{FloodSafeLK.Api_HostAddress}}/api/incidents?search=Kolonnawa&district=Colombo&severity=High&sortBy=date&sortDir=desc
+Accept: application/json
+
+### Get one incident (replace id)
+GET {{FloodSafeLK.Api_HostAddress}}/api/incidents/00000000-0000-0000-0000-000000000000
+Accept: application/json
+
+### Create incident
+POST {{FloodSafeLK.Api_HostAddress}}/api/incidents
+Content-Type: application/json
+
+{
+  "reporterName": "Amal Silva",
+  "phone": "0771234567",
+  "district": "Colombo",
+  "location": "Wellampitiya junction",
+  "incidentType": "UrbanFlooding",
+  "severity": "Moderate",
+  "description": "Shallow flooding after afternoon rain. Demonstration report for API testing only.",
+  "dateTime": "2026-09-04T10:00:00+05:30",
+  "waterLevel": 35,
+  "affectedPeople": 12,
+  "roadAccessibility": "Restricted"
+}
+
+### Update incident (replace id)
+PUT {{FloodSafeLK.Api_HostAddress}}/api/incidents/00000000-0000-0000-0000-000000000000
+Content-Type: application/json
+
+{
+  "reporterName": "Amal Silva",
+  "phone": "0771234567",
+  "district": "Colombo",
+  "location": "Wellampitiya junction",
+  "incidentType": "UrbanFlooding",
+  "severity": "High",
+  "description": "Water has risen since the first report. Still demonstration data only.",
+  "dateTime": "2026-09-04T11:00:00+05:30",
+  "waterLevel": 70,
+  "affectedPeople": 20,
+  "roadAccessibility": "Closed"
+}
+
+### Delete incident (replace id)
+DELETE {{FloodSafeLK.Api_HostAddress}}/api/incidents/00000000-0000-0000-0000-000000000000

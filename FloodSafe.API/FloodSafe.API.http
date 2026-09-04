@@ -1,6 +1,0 @@
-@FloodSafe.API_HostAddress = http://localhost:5179
-
-GET {{FloodSafe.API_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
