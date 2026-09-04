@@ -144,8 +144,21 @@ const ResourceDetails = ({ resource, onEdit, onDelete, onClose }) => {
             </div>
             <div className="details-field">
               <span className="details-field-label">Stock Status</span>
-              <span className="details-field-value" style={{ color: isLowStock ? "#fcd34d" : "#6ee7b7", fontWeight: 700 }}>
-                {isLowStock ? "⚠ Low Stock" : "✓ Available"}
+              <span
+                className="details-field-value"
+                style={{
+                  color:
+                    status === "Depleted" ? "#fca5a5" :
+                    status === "Reserved" ? "#c4b5fd" :
+                    isLowStock ? "#fcd34d" : "#6ee7b7",
+                  fontWeight: 700,
+                }}
+              >
+                {status === "Depleted"
+                  ? "🔴 Depleted"
+                  : status === "Reserved"
+                    ? "🟣 Reserved"
+                    : (isLowStock ? "⚠ Low Stock" : "✓ Available")}
               </span>
             </div>
           </div>
