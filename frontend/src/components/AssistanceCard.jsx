@@ -16,12 +16,12 @@ function formatDate(dt) {
 }
 
 export default function AssistanceCard({ request, onView, onEdit, onDelete }) {
-  const { id, requesterName, district, location, requestType, priority, status, numberOfPeople, description, createdAt, isSample } = request;
+  const { id, requesterName, district, location, requestType, priority, status, numberOfPeople, description, createdAt } = request;
 
   return (
     <article
       id={`card-${id}`}
-      className={`a-card priority-${priority}${isSample ? ' sample-card' : ''}`}
+      className={`a-card priority-${priority}`}
       onClick={onView}
       role="button"
       tabIndex={0}
@@ -34,7 +34,6 @@ export default function AssistanceCard({ request, onView, onEdit, onDelete }) {
           <div className="card-id">#{id} · {district}</div>
         </div>
         <div className="card-badges">
-          {isSample && <span className="badge badge-sample">DEMO</span>}
           <span className={priorityClass(priority)}>{priority}</span>
           <span className={statusClass(status)}>{statusLabel(status)}</span>
         </div>

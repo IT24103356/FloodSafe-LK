@@ -48,9 +48,6 @@ export default function AssistanceDetails({ request, onClose, onEdit, onDelete, 
         <div className="modal-header">
           <div>
             <h2 className="modal-title">Request Details</h2>
-            {request.isSample && (
-              <span className="badge badge-sample" style={{ marginTop: 4, display: 'inline-flex' }}>⚠ DEMO / SAMPLE DATA</span>
-            )}
           </div>
           <button className="modal-close" id={`btn-close-detail-${request.id}`} onClick={onClose} aria-label="Close details"><X size={18} /></button>
         </div>

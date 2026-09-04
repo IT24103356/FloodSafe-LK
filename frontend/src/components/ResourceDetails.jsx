@@ -26,7 +26,7 @@ const ResourceDetails = ({ resource, onEdit, onDelete, onClose, canManage = fals
   const {
     id, resourceName, resourceType, district, location,
     quantity, unit, minimumRequired, status, lastUpdated,
-    notes, isLowStock, isSample
+    notes, isLowStock
   } = resource;
 
   const icon       = RESOURCE_TYPE_ICONS[resourceType] || "📦";
@@ -54,11 +54,6 @@ const ResourceDetails = ({ resource, onEdit, onDelete, onClose, canManage = fals
           <div className="details-badges">
             <span className="details-badge badge-type">{resourceType}</span>
             <span className="details-badge badge-type"><MapPin size={14} /> {district}</span>
-            {isSample && (
-              <span className="details-badge" style={{ background: "rgba(99,102,241,0.2)", color: "#a5b4fc", border: "1px solid rgba(99,102,241,0.3)" }}>
-                SAMPLE DATA
-              </span>
-            )}
           </div>
         </div>
 
@@ -178,10 +173,6 @@ const ResourceDetails = ({ resource, onEdit, onDelete, onClose, canManage = fals
             <div className="details-field">
               <span className="details-field-label">Last Updated</span>
               <span className="details-field-value">{formatDate(lastUpdated)}</span>
-            </div>
-            <div className="details-field">
-              <span className="details-field-label">Sample Data</span>
-              <span className="details-field-value">{isSample ? "Yes (Demo)" : "No"}</span>
             </div>
           </div>
 

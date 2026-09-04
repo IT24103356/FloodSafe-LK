@@ -53,7 +53,7 @@ const ResourceCard = ({ resource, onView, onEdit, onDelete, canManage = false })
   const {
     id, resourceName, resourceType, district, location,
     quantity, unit, minimumRequired, status, lastUpdated,
-    isLowStock, isSample
+    isLowStock
   } = resource;
 
   const ResourceIcon = resourceIcons[resourceType] || Package;
@@ -72,7 +72,6 @@ const ResourceCard = ({ resource, onView, onEdit, onDelete, canManage = false })
         </div>
         <div className="badge-group">
           <span className={`badge ${badge.cls}`}>{badge.label}</span>
-          {isSample && <span className="badge badge-sample">SAMPLE</span>}
         </div>
       </div>
 

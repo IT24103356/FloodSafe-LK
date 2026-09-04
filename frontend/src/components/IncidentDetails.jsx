@@ -20,10 +20,6 @@ export default function IncidentDetails({ incident, onDelete, deleting, message 
         <StatusBadge className={riskClass} tone={incident.riskLevel === 'Critical' ? 'danger' : incident.riskLevel === 'High' ? 'warning' : 'info'}>{incident.riskLevel} risk</StatusBadge>
       </header>
 
-      {incident.isSample ? (
-        <p className="sample-flag">Sample demonstration data — not a live government report.</p>
-      ) : null}
-
       <dl className="details-grid">
         <Item label="Incident type" value={typeLabel(incident.incidentType)} />
         <Item label="Severity" value={incident.severity} />

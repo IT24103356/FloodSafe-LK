@@ -59,8 +59,7 @@ export default function Home() {
     const recent = [...snapshot.incidents]
       .sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime))
       .slice(0, 4)
-    const hasSamples = Object.values(snapshot).some((items) => items.some((item) => item.isSample))
-    return { openCentres, freeSpaces, lowStock, openAssistance, severity, assistanceStatus, recent, hasSamples }
+    return { openCentres, freeSpaces, lowStock, openAssistance, severity, assistanceStatus, recent }
   }, [snapshot])
 
   return (
@@ -123,7 +122,7 @@ export default function Home() {
                 ))}
               </article>
             </div>
-            {data.hasSamples && <p className="dashboard-disclaimer">Some totals include clearly labelled demonstration records. FloodSafe LK is not an official government alert service.</p>}
+            <p className="dashboard-disclaimer">FloodSafe LK contains community-submitted information and is not an official government alert service.</p>
           </>
         )}
       </section>

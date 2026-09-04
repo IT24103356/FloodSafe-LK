@@ -36,7 +36,6 @@ export default function IncidentCard({ incident }) {
           <dd>{incident.affectedPeople}</dd>
         </div>
       </dl>
-      {incident.isSample ? <p className="sample-flag">Sample demonstration data</p> : null}
       <Link className="card-link" to={`/incidents/${incident.id}`}>
         View details <ArrowRight size={15} aria-hidden="true" />
       </Link>

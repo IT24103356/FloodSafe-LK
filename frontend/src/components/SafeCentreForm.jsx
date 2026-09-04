@@ -285,22 +285,6 @@ function SafeCentreForm({ initial, onSubmit, onCancel, loading }) {
                 />
               </div>
 
-              {/* Is Sample */}
-              <div className="form-group full">
-                <div className="toggle-row">
-                  <span className="toggle-label">Mark as Demo / Sample Data</span>
-                  <label className="toggle" aria-label="Mark as sample data">
-                    <input
-                      id="f-is-sample"
-                      type="checkbox"
-                      checked={fields.isSample}
-                      onChange={e => handle('isSample', e.target.checked)}
-                    />
-                    <span className="toggle-slider" />
-                  </label>
-                </div>
-              </div>
-
             </div>
           </div>
 

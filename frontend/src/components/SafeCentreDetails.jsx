@@ -43,7 +43,6 @@ function SafeCentreDetails({ centre, onClose, onEdit, onDelete, canManage = fals
               <span className={`avail-badge ${centre.availability ? 'open' : 'closed'}`}>
                 {centre.availability ? '● Open' : '● Closed'}
               </span>
-              {centre.isSample && <span className="sample-badge">DEMO DATA</span>}
             </div>
             <div style={{ fontSize: '0.82rem', color: 'var(--clr-primary-light)', marginTop: '0.25rem' }}>
               <MapPin size={15} /> {centre.district} District
@@ -54,12 +53,6 @@ function SafeCentreDetails({ centre, onClose, onEdit, onDelete, canManage = fals
 
         {/* Body */}
         <div className="modal-body">
-          {centre.isSample && (
-            <div className="alert warning" style={{ marginBottom: '1.25rem' }}>
-              ⚠️ <strong>Demo Data</strong> — This is a sample record used for demonstration. It does not represent a real active safe centre.
-            </div>
-          )}
-
           <div className="details-grid">
             {/* Capacity block */}
             <div className="detail-capacity-wrap">

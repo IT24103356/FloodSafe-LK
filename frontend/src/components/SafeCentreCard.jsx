@@ -25,7 +25,7 @@ function SafeCentreCard({ centre, onView, onEdit, onDelete, canManage = false })
 
   return (
     <article
-      className={`sc-card${centre.isSample ? ' sample-card' : ''}`}
+      className="sc-card"
       onClick={() => onView(centre)}
       role="button"
       tabIndex={0}
@@ -46,9 +46,6 @@ function SafeCentreCard({ centre, onView, onEdit, onDelete, canManage = false })
           <span className={`avail-badge ${centre.availability ? 'open' : 'closed'}`}>
             {centre.availability ? '● Open' : '● Closed'}
           </span>
-          {centre.isSample && (
-            <span className="sample-badge">DEMO</span>
-          )}
         </div>
       </div>
 
