@@ -19,8 +19,11 @@ export default function Home() {
           <Link className="btn ghost" to="/incidents">
             Browse reports
           </Link>
-          <Link className="btn secondary" to="/safe-centres">
+          <Link className="btn ghost" to="/safe-centres">
             Find Safe Centres
+          </Link>
+          <Link className="btn ghost" to="/resources">
+            Emergency resources
           </Link>
         </div>
       </div>

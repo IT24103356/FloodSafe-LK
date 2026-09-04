@@ -18,6 +18,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 
 builder.Services.AddScoped<IIncidentService, IncidentService>();
+builder.Services.AddScoped<IEmergencyResourceService, EmergencyResourceService>();
 builder.Services.AddScoped<ISafeCentreService, SafeCentreService>();
 
 const string devCors = "DevCors";
@@ -90,6 +91,7 @@ using (var scope = app.Services.CreateScope())
     {
         await db.Database.MigrateAsync();
         await IncidentSeeder.SeedAsync(db);
+        await EmergencyResourceSeeder.SeedAsync(db);
         await SafeCentreSeeder.SeedAsync(db);
     }
     catch (Exception ex)
