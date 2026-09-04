@@ -12,6 +12,7 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<Incident> Incidents => Set<Incident>();
     public DbSet<EmergencyResource> EmergencyResources => Set<EmergencyResource>();
+    public DbSet<SafeCentre> SafeCentres => Set<SafeCentre>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -52,5 +53,19 @@ public class ApplicationDbContext : DbContext
         resource.HasIndex(e => e.District);
         resource.HasIndex(e => e.ResourceType);
         resource.HasIndex(e => e.Status);
+
+        var safeCentre = modelBuilder.Entity<SafeCentre>();
+        safeCentre.HasKey(s => s.Id);
+        safeCentre.Property(s => s.Id).ValueGeneratedOnAdd();
+        safeCentre.Property(s => s.Name).IsRequired().HasMaxLength(200);
+        safeCentre.Property(s => s.District).IsRequired().HasMaxLength(100);
+        safeCentre.Property(s => s.Address).IsRequired().HasMaxLength(500);
+        safeCentre.Property(s => s.ContactNumber).IsRequired().HasMaxLength(20);
+        safeCentre.Property(s => s.Facilities).HasMaxLength(1000);
+        safeCentre.Property(s => s.Notes).HasMaxLength(1000);
+        safeCentre.Ignore(s => s.AvailableSpaces);
+
+        safeCentre.HasIndex(s => s.District);
+        safeCentre.HasIndex(s => s.Availability);
     }
 }

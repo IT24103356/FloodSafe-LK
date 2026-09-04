@@ -13,6 +13,7 @@ export default function App() {
           </NavLink>
           <NavLink to="/incidents">Incidents</NavLink>
           <NavLink to="/report">Report</NavLink>
+          <NavLink to="/safe-centres">Safe Centres</NavLink>
           <NavLink to="/resources">Emergency Resources</NavLink>
         </nav>
       </header>
@@ -20,7 +21,10 @@ export default function App() {
         <Outlet />
       </main>
       <footer className="site-footer">
-        <p>FloodSafe LK Platform · Member 1: Kowdu.A.B (IT24103356) | Member 3: Mamalgaha I.G.W.S. (IT24102615 - Emergency Resources)</p>
+        <p>
+          Flood Incident Management (IT24103356) · Safe Centre Management (IT24101739) · Emergency
+          Resources (IT24102615)
+        </p>
         <p>Demonstration prototype — not official disaster information.</p>
       </footer>
     </div>

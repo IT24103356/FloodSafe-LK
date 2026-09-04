@@ -7,6 +7,7 @@ import IncidentView from './pages/IncidentView.jsx'
 import Incidents from './pages/Incidents.jsx'
 import ReportIncident from './pages/ReportIncident.jsx'
 import EmergencyResources from './pages/EmergencyResources.jsx'
+import SafeCentres from './pages/SafeCentres.jsx'
 import './index.css'
 
 createRoot(document.getElementById('root')).render(
@@ -20,6 +21,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/incidents/:id/edit" element={<ReportIncident />} />
           <Route path="/report" element={<ReportIncident />} />
           <Route path="/resources" element={<EmergencyResources />} />
+          <Route path="/safe-centres" element={<SafeCentres />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
