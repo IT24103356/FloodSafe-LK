@@ -13,13 +13,14 @@ export default function App() {
           </NavLink>
           <NavLink to="/incidents">Incidents</NavLink>
           <NavLink to="/report">Report</NavLink>
+          <NavLink to="/safe-centres">Safe Centres</NavLink>
         </nav>
       </header>
       <main>
         <Outlet />
       </main>
       <footer className="site-footer">
-        <p>Flood Incident Management · Member: Kowdu.A.B (IT24103356)</p>
+        <p>Flood Incident Management (IT24103356) · Safe Centre Management (IT24101739)</p>
         <p>Demonstration prototype — not official disaster information.</p>
       </footer>
     </div>
