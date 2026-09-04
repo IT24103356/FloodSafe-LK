@@ -29,11 +29,23 @@ import {
 // ── Toast Hook ────────────────────────────────────────────────────────────────
 const useToast = () => {
   const [toasts, setToasts] = useState([]);
+  const timers = useRef(new Map());
+
+  useEffect(() => {
+    return () => {
+      timers.current.forEach(clearTimeout);
+      timers.current.clear();
+    };
+  }, []);
 
   const addToast = useCallback((message, type = "info") => {
-    const id = Date.now();
+    const id = (globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`);
     setToasts(prev => [...prev, { id, message, type }]);
-    setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 4000);
+    const timeoutId = setTimeout(() => {
+      setToasts(prev => prev.filter(t => t.id !== id));
+      timers.current.delete(id);
+    }, 4000);
+    timers.current.set(id, timeoutId);
   }, []);
 
   return { toasts, addToast };
