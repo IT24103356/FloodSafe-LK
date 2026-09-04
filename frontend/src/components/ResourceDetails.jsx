@@ -75,6 +75,7 @@ const ResourceDetails = ({ resource, onEdit, onDelete, onClose }) => {
                 aria-valuenow={quantity}
                 aria-valuemin={0}
                 aria-valuemax={Math.max(minimumRequired * 2, quantity, 1)}
+              />
             </div>
             <div className="stock-hero-legend">
               <span>0</span>

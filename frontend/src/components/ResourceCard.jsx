@@ -99,6 +99,7 @@ const ResourceCard = ({ resource, onView, onEdit, onDelete }) => {
             aria-valuenow={quantity}
             aria-valuemin={0}
             aria-valuemax={Math.max(minimumRequired * 2, quantity, 1)}
+          />
         </div>
         <div className="quantity-min">Min. Required: {minimumRequired.toLocaleString()} {unit}</div>
       </div>

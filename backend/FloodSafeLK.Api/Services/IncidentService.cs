@@ -94,7 +94,7 @@ public class IncidentService : IIncidentService
             IncidentType = IncidentRules.Canonical(dto.IncidentType, IncidentRules.IncidentTypes),
             Severity = IncidentRules.Canonical(dto.Severity, IncidentRules.Severities),
             Description = dto.Description.Trim(),
-            DateTime = dto.DateTime!.Value,
+            DateTime = dto.DateTime!.Value.ToUniversalTime(),
             WaterLevel = dto.WaterLevel.Value,
             AffectedPeople = dto.AffectedPeople.Value,
             RoadAccessibility = IncidentRules.Canonical(dto.RoadAccessibility, IncidentRules.RoadAccessibilities),
@@ -131,7 +131,7 @@ public class IncidentService : IIncidentService
         incident.IncidentType = IncidentRules.Canonical(dto.IncidentType, IncidentRules.IncidentTypes);
         incident.Severity = IncidentRules.Canonical(dto.Severity, IncidentRules.Severities);
         incident.Description = dto.Description.Trim();
-        incident.DateTime = dto.DateTime!.Value;
+        incident.DateTime = dto.DateTime!.Value.ToUniversalTime();
         incident.WaterLevel = dto.WaterLevel.Value;
         incident.AffectedPeople = dto.AffectedPeople.Value;
         incident.RoadAccessibility = IncidentRules.Canonical(dto.RoadAccessibility, IncidentRules.RoadAccessibilities);
