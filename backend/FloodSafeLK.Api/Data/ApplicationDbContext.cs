@@ -13,6 +13,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Incident> Incidents => Set<Incident>();
     public DbSet<EmergencyResource> EmergencyResources => Set<EmergencyResource>();
     public DbSet<SafeCentre> SafeCentres => Set<SafeCentre>();
+    public DbSet<AssistanceRequest> AssistanceRequests => Set<AssistanceRequest>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -67,5 +68,21 @@ public class ApplicationDbContext : DbContext
 
         safeCentre.HasIndex(s => s.District);
         safeCentre.HasIndex(s => s.Availability);
+
+        var assistanceRequest = modelBuilder.Entity<AssistanceRequest>();
+        assistanceRequest.HasKey(r => r.Id);
+        assistanceRequest.Property(r => r.RequesterName).IsRequired().HasMaxLength(100);
+        assistanceRequest.Property(r => r.Phone).IsRequired().HasMaxLength(20);
+        assistanceRequest.Property(r => r.District).IsRequired().HasMaxLength(50);
+        assistanceRequest.Property(r => r.Location).IsRequired().HasMaxLength(200);
+        assistanceRequest.Property(r => r.Description).IsRequired().HasMaxLength(1000);
+        assistanceRequest.Property(r => r.RequestType).HasConversion<string>().HasMaxLength(30);
+        assistanceRequest.Property(r => r.Priority).HasConversion<string>().HasMaxLength(20);
+        assistanceRequest.Property(r => r.Status).HasConversion<string>().HasMaxLength(20);
+
+        assistanceRequest.HasIndex(r => r.District);
+        assistanceRequest.HasIndex(r => r.RequestType);
+        assistanceRequest.HasIndex(r => r.Priority);
+        assistanceRequest.HasIndex(r => r.Status);
     }
 }

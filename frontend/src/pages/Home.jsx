@@ -25,6 +25,9 @@ export default function Home() {
           <Link className="btn ghost" to="/resources">
             Emergency resources
           </Link>
+          <Link className="btn ghost" to="/assistance">
+            Request assistance
+          </Link>
         </div>
       </div>
 
@@ -34,6 +37,7 @@ export default function Home() {
           <li>Households deciding whether a road is still passable</li>
           <li>Neighbours checking water level and how many people are affected nearby</li>
           <li>Families finding nearby emergency shelters and available capacity</li>
+          <li>Flood-affected residents requesting food, water, medical help or evacuation</li>
           <li>Local volunteers triaging reports by district, type and severity</li>
         </ul>
         <p className="disclaimer">

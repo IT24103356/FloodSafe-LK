@@ -20,6 +20,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IIncidentService, IncidentService>();
 builder.Services.AddScoped<IEmergencyResourceService, EmergencyResourceService>();
 builder.Services.AddScoped<ISafeCentreService, SafeCentreService>();
+builder.Services.AddScoped<IAssistanceRequestService, AssistanceRequestService>();
 
 const string devCors = "DevCors";
 const string productionCors = "ProductionCors";
@@ -93,6 +94,7 @@ using (var scope = app.Services.CreateScope())
         await IncidentSeeder.SeedAsync(db);
         await EmergencyResourceSeeder.SeedAsync(db);
         await SafeCentreSeeder.SeedAsync(db);
+        await AssistanceRequestSeeder.SeedAsync(db);
     }
     catch (Exception ex)
     {
